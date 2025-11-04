@@ -29,6 +29,8 @@ export default function UserProfile() {
 
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
+  const [editingComment, setEditingComment] = useState(false);
+  const [editCommentText, setEditCommentText] = useState("");
 
   // Fetch profile (user info + posts)
   useEffect(() => {
@@ -237,6 +239,61 @@ export default function UserProfile() {
       } else {
         alert("Failed to update profile");
       }
+    }
+  };
+
+  // Update Comment
+  const updateComment = async (postId, commentId) => {
+    if (!editCommentText.trim()) return;
+    try {
+      const { data } = await axios.put(
+        `http://localhost:8000/posts/${postId}/comments/${commentId}`,
+        { userId, text: editCommentText } // only userId and text
+      );
+
+      setPosts((prev) =>
+        prev.map((p) =>
+          p._id === postId
+            ? {
+                ...p,
+                comments: p.comments.map((c) =>
+                  c._id === commentId ? { ...c, text: editCommentText } : c
+                ),
+              }
+            : p
+        )
+      );
+
+      setEditingComment(null);
+      setEditCommentText("");
+    } catch (error) {
+      console.error(
+        "Error updating comment:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  // Delete Comment
+  const deleteComment = async (postId, commentId) => {
+    try {
+      await axios.delete(
+        `http://localhost:8000/posts/${postId}/comments/${commentId}`,
+        { data: { userId } } // only send userId
+      );
+
+      setPosts((prev) =>
+        prev.map((p) =>
+          p._id === postId
+            ? { ...p, comments: p.comments.filter((c) => c._id !== commentId) }
+            : p
+        )
+      );
+    } catch (error) {
+      console.error(
+        "Error deleting comment:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -590,7 +647,7 @@ export default function UserProfile() {
                   <p className="text-sm text-gray-500">No comments yet</p>
                 ) : (
                   post.comments.map((c) => (
-                    <div key={c._id} className="mb-2 flex gap-2">
+                    <div key={c._id} className="mb-2 flex gap-2 text-sm">
                       <div className="flex gap-2">
                         <p className="text-sm font-semibold">
                           {c.user.fullName}:
@@ -600,6 +657,11 @@ export default function UserProfile() {
                       <p className="text-xs text-gray-400">
                         {new Date(c.createdAt).toLocaleString()}
                       </p>
+                      <button onClick={updateComment}>edit</button>
+                      <button onClick={deleteComment}>delete</button>
+                      {editingComment && (
+                        <input type="text" placeholder="enter" value="" />
+                      )}
                     </div>
                   ))
                 )}
@@ -617,6 +679,7 @@ export default function UserProfile() {
                     }
                     className="flex-1 border px-3 py-1 rounded"
                   />
+
                   <button
                     onClick={() => addComment(post._id)}
                     className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"

@@ -229,34 +229,34 @@ const PostComponent = () => {
                     </p>
                   </div>
                 </div>
-
-                {/* Post Content */}
-                {editingPost === post._id ? (
-                  <div className="flex flex-col gap-2">
-                    <textarea
-                      value={editContent}
-                      onChange={(e) => setEditContent(e.target.value)}
-                      className="border p-2 rounded"
-                    />
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => updatePost(post._id)}
-                        className="bg-gray-600 text-white px-3 py-1 rounded"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => setEditingPost(null)}
-                        className="bg-gray-400 text-white px-3 py-1 rounded"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="mt-2 text-gray-900 text-lg">{post.content}</p>
-                )}
               </Link>
+              {/* Post Content */}
+              {editingPost === post._id ? (
+                <div className="flex flex-col gap-2">
+                  <textarea
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    className="border p-2 rounded"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => updatePost(post._id)}
+                      className="bg-gray-600 text-white px-3 py-1 rounded"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditingPost(null)}
+                      className="bg-gray-400 text-white px-3 py-1 rounded"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="mt-2 text-gray-900 text-lg">{post.content}</p>
+              )}
+
               {/* Like + Edit/Delete Post */}
               <div className="mt-3 flex gap-4 text-sm text-gray-600">
                 <button
