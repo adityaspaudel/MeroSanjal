@@ -69,6 +69,62 @@ export default function IndividualPost() {
     }
   };
 
+  // Update Comment
+  const updateComment = async (postId, commentId) => {
+    if (!editCommentText.trim()) return;
+
+    try {
+      const { data } = await axios.put(
+        `http://localhost:8000/posts/${postId}/comments/${commentId}`,
+        { userId, text: editCommentText } // only userId and text
+      );
+
+      setPosts((prev) =>
+        prev.map((p) =>
+          p._id === postId
+            ? {
+                ...p,
+                comments: p.comments.map((c) =>
+                  c._id === commentId ? { ...c, text: editCommentText } : c
+                ),
+              }
+            : p
+        )
+      );
+
+      setEditingComment(null);
+      setEditCommentText("");
+    } catch (error) {
+      console.error(
+        "Error updating comment:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  // Delete Comment
+  const deleteComment = async (postId, commentId) => {
+    try {
+      await axios.delete(
+        `http://localhost:8000/posts/${postId}/comments/${commentId}`,
+        { data: { userId } } // only send userId
+      );
+
+      setPosts((prev) =>
+        prev.map((p) =>
+          p._id === postId
+            ? { ...p, comments: p.comments.filter((c) => c._id !== commentId) }
+            : p
+        )
+      );
+    } catch (error) {
+      console.error(
+        "Error deleting comment:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   if (!currentPost) {
     return <p className="p-6">Loading...</p>;
   }

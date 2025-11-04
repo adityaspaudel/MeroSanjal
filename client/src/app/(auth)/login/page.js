@@ -52,7 +52,9 @@ const LoginForm = () => {
 
           alert("Login successful!");
           resetForm();
-          router.push(`${data.user.id}/home`); // Redirect to home page
+          console.log(data.user.id);
+          router.push(`/${data.user.id}/home`);
+          // Redirect to home page
         } else {
           // Show error message from the response
           alert(data.message || "Login failed. Please try again.");
@@ -144,7 +146,7 @@ const LoginForm = () => {
             </Link>
           </p>
           <p className="mt-2 text-sm">
-            Don't have an account?{" "}
+            Dont have an account?{" "}
             <Link href="/register" className="text-blue-500 hover:underline">
               Sign Up
             </Link>
