@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
@@ -133,7 +135,7 @@ const PostComponent = () => {
         `http://localhost:8000/posts/${postId}/comments/${commentId}`,
         { userId, text: editCommentText } // only userId and text
       );
-
+      console.log(data);
       setPosts((prev) =>
         prev.map((p) =>
           p._id === postId
