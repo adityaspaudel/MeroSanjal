@@ -39,7 +39,7 @@ const LoginForm = () => {
         const data = await response.json();
 
         console.log("Response Data:", data);
-
+        // for understanding
         // Check for success status before proceeding
         if (response.ok) {
           // Store token and userId (as id) in localStorage if available
