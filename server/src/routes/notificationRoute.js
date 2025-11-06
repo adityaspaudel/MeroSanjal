@@ -5,6 +5,7 @@ const router = express.Router();
 const {
   getNotifications,
   readUnreadNotifications,
+  getUnreadNotificationCount,
 } = require("../controllers/notificationController");
 
 // getNotifications route
@@ -14,6 +15,10 @@ router.get("/users/:userId/notifications", getNotifications);
 router.put(
   "/users/:userId/notifications/:notificationId/read",
   readUnreadNotifications
+);
+router.get(
+  "/users/:userId/notifications/unreadNotificationCount",
+  getUnreadNotificationCount
 );
 
 module.exports = router;
