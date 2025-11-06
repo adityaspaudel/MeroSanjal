@@ -186,7 +186,7 @@ const HomeComponent = () => {
   };
 
   return (
-    <div className="p-6 w-full mx-auto">
+    <div className="p-6 w-full mx-auto bg-green-200">
       {/* Create Post */}
 
       <div className="mb-6 w-full">
@@ -198,7 +198,7 @@ const HomeComponent = () => {
         />
         <button
           onClick={createPost}
-          className="bg-gray-600 text-white px-4 py-2 rounded"
+          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
         >
           Post
         </button>
@@ -267,7 +267,7 @@ const HomeComponent = () => {
               <div className="mt-3 flex gap-4 text-sm text-gray-600">
                 <button
                   onClick={() => toggleLike(post._id)}
-                  className={`px-3 py-1 rounded text-white ${
+                  className={`px-3 py-1 rounded-md text-sm text-white ${
                     liked
                       ? "bg-red-600 hover:bg-red-700"
                       : "bg-green-600 hover:bg-green-700"
@@ -287,13 +287,13 @@ const HomeComponent = () => {
                         setEditingPost(post._id);
                         setEditContent(post.content);
                       }}
-                      className="bg-gray-600 text-white px-3 py-1 rounded"
+                      className="bg-gray-500 hover:bg-gray-600 text-white px-2 rounded-md"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => deletePost(post._id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded"
+                      className="bg-red-500 hover:bg-red-600 text-white px-2  rounded-md"
                     >
                       Delete
                     </button>
@@ -301,7 +301,7 @@ const HomeComponent = () => {
                 )}
               </div>
 
-              {/* Comments */}
+              {/* ✅ Comments */}
               <div className="mt-4">
                 <h4 className="font-bold text-gray-600">Comments:</h4>
                 <ul className="mt-2 flex flex-col gap-2">
@@ -354,15 +354,15 @@ const HomeComponent = () => {
                                     setEditingComment(c._id);
                                     setEditCommentText(c.text);
                                   }}
-                                  className="px-2 py-1 bg-gray-600 text-white rounded"
+                                  className="px-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md"
                                 >
-                                  Edit
+                                  edit
                                 </button>
                                 <button
                                   onClick={() => deleteComment(post._id, c._id)}
-                                  className="px-2 py-1 bg-red-500 text-white rounded"
+                                  className="px-2 py  bg-red-500  hover:bg-red-600 text-white rounded-md"
                                 >
-                                  Delete
+                                  delete
                                 </button>
                               </div>
                             )}
@@ -385,11 +385,11 @@ const HomeComponent = () => {
                         [post._id]: e.target.value,
                       }))
                     }
-                    className="border p-2 rounded flex-1"
+                    className="border border-gray-400 p-2 rounded flex-1"
                   />
                   <button
                     onClick={() => addComment(post._id)}
-                    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                    className="bg-green-500 text-white px-2  rounded-md hover:bg-green-600"
                   >
                     Comment
                   </button>

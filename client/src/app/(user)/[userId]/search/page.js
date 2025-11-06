@@ -1,5 +1,5 @@
 import SearchComponent from "@/components/search/search-component";
-import { SocialMediaSidebarComponent } from "@/components/social-media-sidebar";
+// import { SocialMediaSidebarComponent } from "@/components/social-media-sidebar";
 import React from "react";
 
 const UserSearch = () => {

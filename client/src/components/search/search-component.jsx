@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import {React, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
 
@@ -63,7 +63,7 @@ const SearchComponent = () => {
       />
       <button
         onClick={handleSearch}
-        className="ml-2 p-2 bg-gray-600 text-white rounded"
+        className="ml-2 p-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md"
       >
         Search
       </button>

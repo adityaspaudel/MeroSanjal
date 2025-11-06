@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 export default function AllUsers() {
@@ -74,7 +74,7 @@ export default function AllUsers() {
   if (error) return <p className="p-6 text-red-600">{error}</p>;
 
   return (
-    <div className="p-6 min-h-full bg-green-100 ">
+    <div className="p-6 min-h-full bg-green-200 ">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">All Users</h2>
       {users.length === 0 ? (
         <p className="text-gray-600">No users found.</p>
@@ -83,7 +83,7 @@ export default function AllUsers() {
           {users.map((user) => (
             <div
               key={user._id}
-              className="flex items-center justify-between gap-3 p-4 bg-white shadow rounded-lg min-w-[200px] flex-1"
+              className="flex items-center bg-gray-100 hover:bg-green-300 justify-between gap-3 p-4 bg-white shadow rounded-lg min-w-[200px] flex-1"
             >
               <div className="flex flex-col">
                 <p className="font-semibold text-gray-800">{user.fullName}</p>
@@ -93,7 +93,7 @@ export default function AllUsers() {
                 <button
                   onClick={() => toggleFollow(user._id)}
                   disabled={updating[user._id]}
-                  className={`px-4 py-2 rounded ${
+                  className={`px-2 py-1 text-sm rounded-md ${
                     user.isFollowing
                       ? "bg-red-500 text-white hover:bg-red-600"
                       : "bg-green-500 text-white hover:bg-green-600"

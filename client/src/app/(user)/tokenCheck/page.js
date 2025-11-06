@@ -1,5 +1,5 @@
 import { getuserIdFromToken } from "@/lib/auth";
-
+import React from "react";
 export default async function Dashboard() {
   const userId = getuserIdFromToken();
 
@@ -10,6 +10,7 @@ export default async function Dashboard() {
   });
 
   const user = await res.json();
+  console.log(user);
   if (!userId) {
     return <p>Please log in</p>;
   }

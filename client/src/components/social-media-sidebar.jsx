@@ -87,135 +87,130 @@ export function SocialMediaSidebarComponent() {
   }, [userId]);
 
   return (
-    <div
-      className="flex flex-col left-0 top-0 sticky h-screen w-[80px] sm:w-[100px] md:w-[100px] xl:w-[350px]
-      bg-green-100 justify-between border-r p-4"
-    >
-      {/* -------- TOP SECTION -------- */}
-      <div className="space-y-4 w-full ">
-        <Link href={`/${userId}/home`} className="flex gap-2 px-4">
-          <FaConnectdevelop className="text-2xl" />
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight hover:underline hidden md:block">
-            Mero Sanjal
-          </h2>
-        </Link>
+    <div className=" flex flex-col bg-green-200 h-screen p-6 left-0 top-0 sticky">
+      <div
+        className="flex flex-col   w-[80px] sm:w-[100px] md:w-[100px] xl:w-[350px]
+        justify-between  h-full border-r py-4 px-2 bg-gray-100 rounded-lg"
+      >
+        {/* -------- TOP SECTION -------- */}
+        <div className="space-y-4 w-full  rounded-md">
+          <Link href={`/${userId}/home`} className="flex gap-2 px-4">
+            <FaConnectdevelop className="text-2xl" />
+            <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight hover:underline hidden md:block">
+              Mero Sanjal
+            </h2>
+          </Link>
+          {/* -------- NAV LINKS -------- */}
+          <div className="space-y-1 flex flex-col gap-2">
+            {/* Home */}
+            <Link href={`/${userId}/home`}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start  hover:bg-green-300"
+              >
+                <IoHomeSharp />
+                <span className="hidden md:block ml-2">Home</span>
+              </Button>
+            </Link>
+            {/* Search */}
+            <Link href={`/${userId}/search`}>
+              <Button
+                variant="ghost"
+                className="flex gap-2 w-full justify-start  hover:bg-green-300"
+              >
+                <RiSearchFill />
+                <input
+                  className="w-full bg-transparent focus:outline-none hidden md:block"
+                  type="text"
+                  placeholder="Search"
+                />
+              </Button>
+            </Link>
+            {/* Notifications (with badge) */}
+            <Link href={`/${userId}/notifications`}>
+              <Button
+                variant="ghost"
+                className="relative w-full justify-start  hover:bg-green-300"
+              >
+                <FaBell className="text-xl" />
+                {/* ✅ Badge */}
+                {unreadCount > 0 && (
+                  <span
+                    className="absolute top-1 left-6 bg-red-500 text-white text-[10px]
+                    font-bold rounded-full h-4 w-4 flex items-center justify-center"
+                  >
+                    {unreadCount > 10 ? "10+" : unreadCount}
+                  </span>
+                )}
+                <span className="hidden md:block ml-2">Notifications</span>
+              </Button>
+            </Link>
+            {/* Messages */}
+            <Link href={`/${userId}/messages`}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-green-300"
+              >
+                <IoMail />
+                <span className=" hidden md:block ml-2">Messages</span>
+              </Button>
+            </Link>
+            {/* Profile */}
+            <Link href={`/${userId}/profile`}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-green-300"
+              >
+                <FaUserAlt />
+                <span className="hidden md:block ml-2">Profile</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
 
-        {/* -------- NAV LINKS -------- */}
-        <div className="space-y-1">
-          {/* Home */}
-          <Link href={`/${userId}/home`}>
+        {/* -------- BOTTOM SECTION (User Info + Settings + Logout) -------- */}
+        <div className="px-2 py-2 bg-gray-100 rounded-md">
+          {user && (
+            <div className="flex items-center space-x-2 rounded-md border hover:bg-green-300">
+              <Link
+                href={`/${userId}/profile`}
+                className="flex items-center gap-2 "
+              >
+                <Avatar>
+                  <AvatarImage src="/cartoon-cute.jpg" alt={user.fullName} />
+                </Avatar>
+                <div className="flex flex-col">
+                  <p className="text-sm font-medium leading-none hidden md:block">
+                    {user.fullName}
+                  </p>
+                  <p className="text-sm text-muted-foreground hidden md:block">
+                    @{user.email.split("@")[0]}
+                  </p>
+                </div>
+              </Link>
+            </div>
+          )}
+          {/* Settings */}
+          <Link href={`/${userId}/userSettings`}>
             <Button
               variant="ghost"
-              className="w-full justify-start hover:bg-gray-100"
+              className="w-full justify-start hover:bg-green-300"
             >
-              <IoHomeSharp />
-              <span className="hidden md:block ml-2">Home</span>
+              <IoSettingsSharp />
+              <span className="logout hidden md:block ml-2">Setting</span>
             </Button>
           </Link>
-
-          {/* Search */}
-          <Link href={`/${userId}/search`}>
+          {/* Logout */}
+          <Link href="/">
             <Button
               variant="ghost"
-              className="flex gap-2 w-full justify-start hover:bg-gray-100"
+              className="w-full justify-start text-red-500 hover:text-red-600 hover:text-white hover:bg-red-600 font-bold"
             >
-              <RiSearchFill />
-              <input
-                className="w-full bg-transparent focus:outline-none hidden md:block"
-                type="text"
-                placeholder="Search"
-              />
-            </Button>
-          </Link>
-
-          {/* Notifications (with badge) */}
-          <Link href={`/${userId}/notifications`}>
-            <Button
-              variant="ghost"
-              className="relative w-full justify-start hover:bg-gray-100"
-            >
-              <FaBell className="text-xl" />
-              {/* ✅ Badge */}
-              {unreadCount > 0 && (
-                <span
-                  className="absolute top-1 left-6 bg-red-500 text-white text-[10px]
-                  font-bold rounded-full h-4 w-4 flex items-center justify-center"
-                >
-                  {unreadCount > 10 ? "10+" : unreadCount}
-                </span>
-              )}
-              <span className="hidden md:block ml-2">Notifications</span>
-            </Button>
-          </Link>
-
-          {/* Messages */}
-          <Link href={`/${userId}/messages`}>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-100"
-            >
-              <IoMail />
-              <span className=" hidden md:block ml-2">Messages</span>
-            </Button>
-          </Link>
-
-          {/* Profile */}
-          <Link href={`/${userId}/profile`}>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-100"
-            >
-              <FaUserAlt />
-              <span className="hidden md:block ml-2">Profile</span>
+              <IoLogOut />
+              <span className="logout hidden md:block ml-2">Logout</span>
             </Button>
           </Link>
         </div>
-      </div>
-
-      {/* -------- BOTTOM SECTION (User Info + Settings + Logout) -------- */}
-      <div className="space-y-1 p-2">
-        {user && (
-          <div className="flex items-center space-x-2 rounded-md border hover:bg-gray-100">
-            <Link
-              href={`/${userId}/profile`}
-              className="flex items-center gap-2"
-            >
-              <Avatar>
-                <AvatarImage src="/cartoon-cute.jpg" alt={user.fullName} />
-              </Avatar>
-              <div className="flex flex-col">
-                <p className="text-sm font-medium leading-none hidden md:block">
-                  {user.fullName}
-                </p>
-                <p className="text-sm text-muted-foreground hidden md:block">
-                  @{user.email.split("@")[0]}
-                </p>
-              </div>
-            </Link>
-          </div>
-        )}
-
-        {/* Settings */}
-        <Link href={`/${userId}/userSettings`}>
-          <Button
-            variant="ghost"
-            className="w-full justify-start hover:bg-gray-100"
-          >
-            <IoSettingsSharp />
-            <span className="logout hidden md:block ml-2">Setting</span>
-          </Button>
-        </Link>
-
-        {/* Logout */}
-        <Link href="/">
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-gray-100 font-bold"
-          >
-            <IoLogOut />
-            <span className="logout hidden md:block ml-2">Logout</span>
-          </Button>
-        </Link>
       </div>
     </div>
   );

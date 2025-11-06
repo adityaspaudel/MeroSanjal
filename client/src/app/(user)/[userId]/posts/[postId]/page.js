@@ -8,7 +8,6 @@ export default function IndividualPost() {
   const { userId, postId } = useParams();
   const router = useRouter();
 
-  
   const [currentPost, setCurrentPost] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [editCommentText, setEditCommentText] = useState("");
@@ -113,7 +112,7 @@ export default function IndividualPost() {
   const liked = currentPost.likes.includes(userId);
 
   return (
-    <div className="flex flex-col gap-2 items-center p-8 max-w-2xl border rounded shadow min-h-full bg-green-100">
+    <div className="flex flex-col gap-2 items-center p-6 max-w-2xl border rounded shadow min-h-full bg-green-200">
       {/* 🔙 Back Button */}
       <div
         className="flex content-start items-start text-2xl font-bold w-full"
@@ -121,9 +120,9 @@ export default function IndividualPost() {
       >
         <span
           onClick={() => router.back()}
-          className="hover:bg-slate-100 h-8 w-8 cursor-pointer"
+          className="hover:bg-slate-100 h-8 w-8 cursor-pointer text-center rounded-2xl"
         >
-          🔙
+          ❮
         </span>
       </div>
 
@@ -207,7 +206,7 @@ export default function IndividualPost() {
                         </button>
                       </div>
                     ) : (
-                      <p className="text-sm text-gray-700">{c.text}</p>
+                      <p className="text-sm text-gray-600">{c.text}</p>
                     )}
                     <p className="text-xs text-gray-400">
                       {new Date(c.createdAt).toLocaleString()}
@@ -222,13 +221,13 @@ export default function IndividualPost() {
                           setEditingComment(c._id);
                           setEditCommentText(c.text);
                         }}
-                        className="text-blue-600 hover:underline"
+                        className="bg-gray-500 hover:bg-gray-600 px-2 py-1 text-white rounded-md"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => deleteComment(currentPost._id, c._id)}
-                        className="text-red-600 hover:underline"
+                        className="bg-red-500 hover:bg-red-600 rounded-md py-1 px-2 text-white"
                       >
                         Delete
                       </button>
@@ -246,7 +245,7 @@ export default function IndividualPost() {
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="Write a comment..."
-              className="flex-1 border px-3 py-1 rounded"
+              className="flex-1 border border-gray-400 px-3 py-1 rounded"
             />
             <button
               onClick={addComment}
