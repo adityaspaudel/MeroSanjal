@@ -264,41 +264,45 @@ const HomeComponent = () => {
               )}
 
               {/* Like + Edit/Delete Post */}
-              <div className="mt-3 flex gap-4 text-sm text-gray-600">
-                <button
-                  onClick={() => toggleLike(post._id)}
-                  className={`px-3 py-1 rounded-md text-sm text-white ${
-                    liked
-                      ? "bg-red-600 hover:bg-red-700"
-                      : "bg-green-600 hover:bg-green-700"
-                  }`}
-                >
-                  {liked ? "Unlike" : "Like"}
-                </button>
-                <span>
-                  {post.likes.length}{" "}
-                  {post.likes.length === 1 ? "Like" : "Likes"}
-                </span>
+              <div className="mt-3 flex gap-4 justify-between items-center text-sm text-gray-600">
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => toggleLike(post._id)}
+                    className={`px-3 py-1 rounded-md text-sm text-white ${
+                      liked
+                        ? "bg-red-600 hover:bg-red-700"
+                        : "bg-green-600 hover:bg-green-700"
+                    }`}
+                  >
+                    {liked ? "Unlike" : "Like"}
+                  </button>
+                  <div className="pt-2">
+                    {post.likes.length}{" "}
+                    {post.likes.length === 1 ? "Like" : "Likes"}
+                  </div>
+                </div>
 
-                {isAuthor && (
-                  <>
-                    <button
-                      onClick={() => {
-                        setEditingPost(post._id);
-                        setEditContent(post.content);
-                      }}
-                      className="bg-gray-500 hover:bg-gray-600 text-white px-2 rounded-md"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => deletePost(post._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-2  rounded-md"
-                    >
-                      Delete
-                    </button>
-                  </>
-                )}
+                <div className="flex gap-2">
+                  {isAuthor && (
+                    <>
+                      <button
+                        onClick={() => {
+                          setEditingPost(post._id);
+                          setEditContent(post.content);
+                        }}
+                        className="bg-gray-500 hover:bg-gray-600 text-white px-2 rounded-md"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => deletePost(post._id)}
+                        className="bg-red-500 hover:bg-red-600 text-white px-2  rounded-md"
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* ✅ Comments */}
@@ -319,7 +323,7 @@ const HomeComponent = () => {
                               onChange={(e) =>
                                 setEditCommentText(e.target.value)
                               }
-                              className="border px-2 py-1 rounded flex-1"
+                              className="border border-gray-400 px-2 py-1 rounded flex-1"
                             />
                             <button
                               onClick={() => updateComment(post._id, c._id)}
@@ -336,36 +340,42 @@ const HomeComponent = () => {
                           </div>
                         ) : (
                           <>
-                            <div className="flex gap-4 content-between items-center w-full">
+                            <div className="flex gap-4 justify-between items-center w-full">
                               <span>
                                 <strong>{c.user.fullName || "User"}:</strong>{" "}
                                 <span>{c.text}</span>
                               </span>
-                              <span className="text-xs text-gray-500">
-                                <span>
-                                  {new Date(c.createdAt).toLocaleString()}
-                                </span>
-                              </span>
-                            </div>
-                            {isCommentAuthor && (
-                              <div className="flex gap-2 mt-1">
-                                <button
-                                  onClick={() => {
-                                    setEditingComment(c._id);
-                                    setEditCommentText(c.text);
-                                  }}
-                                  className="px-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md"
-                                >
-                                  edit
-                                </button>
-                                <button
-                                  onClick={() => deleteComment(post._id, c._id)}
-                                  className="px-2 py  bg-red-500  hover:bg-red-600 text-white rounded-md"
-                                >
-                                  delete
-                                </button>
+                              {/*  */}
+                              <div>
+                                {isCommentAuthor && (
+                                  <div className="flex gap-2 mt-1">
+                                    <button
+                                      onClick={() => {
+                                        setEditingComment(c._id);
+                                        setEditCommentText(c.text);
+                                      }}
+                                      className="px-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md"
+                                    >
+                                      edit
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        deleteComment(post._id, c._id)
+                                      }
+                                      className="px-2 py  bg-red-500  hover:bg-red-600 text-white rounded-md"
+                                    >
+                                      delete
+                                    </button>
+                                  </div>
+                                )}
                               </div>
-                            )}
+                            </div>
+                            {/*  */}
+                            <span className="text-xs text-gray-500">
+                              <span>
+                                {new Date(c.createdAt).toLocaleString()}
+                              </span>
+                            </span>
                           </>
                         )}
                       </li>

@@ -73,14 +73,13 @@
 
 ## **Phase 3: Advanced / Optional Features**
 
-- [ ] **Direct Messaging (DMs)**
-  - [ ] Chat between users
-  - [ ] Real-time using Socket.io
-
 - [x] **Real-time Feed Updates**
   - [x] Live updates for posts
   - [x] Live likes/comments count
 
+- [ ] **Direct Messaging (DMs)**
+  - [ ] Chat between users
+  - [ ] Real-time using Socket.io
 
 
 ---
@@ -109,7 +108,7 @@
 4. Run the development server
 
    ```
-   cd socialmedia/client
+   cd MeroSanjal/client
    npm run dev
    ```
 
