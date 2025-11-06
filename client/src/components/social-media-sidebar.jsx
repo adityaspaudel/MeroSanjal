@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaConnectdevelop, FaUserAlt } from "react-icons/fa";
 import {
   IoHomeSharp,
@@ -10,19 +10,50 @@ import {
 } from "react-icons/io5";
 import { RiSearchFill } from "react-icons/ri";
 import { FaBell } from "react-icons/fa";
-
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import { io } from "socket.io-client"; // ✅ import socket.io-client
 
 export function SocialMediaSidebarComponent() {
   const params = useParams();
   const { userId } = params; // ✅ extract userId from route
   const [user, setUser] = useState(null);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  // ✅ Socket instance
+  const [socket, setSocket] = useState(null);
+
+  // ✅ Fix: use the socket variable so ESLint doesn't warn
+  useEffect(() => {
+    if (socket) {
+      console.log("🟢 Socket connected:", socket.id);
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:8000", {
+      transports: ["websocket"],
+    });
+
+    setSocket(newSocket);
+
+    if (userId) {
+      newSocket.emit("join", userId);
+    }
+
+    newSocket.on("updateUnreadCount", (data) => {
+      setUnreadCount(data.count);
+    });
+
+    newSocket.on("newNotification", (data) => {
+      console.log("🔔 New notification:", data);
+    });
+
+    return () => newSocket.disconnect();
+  }, [userId]);
 
   // ✅ Fetch user info
   useEffect(() => {
@@ -39,7 +70,7 @@ export function SocialMediaSidebarComponent() {
     if (userId) fetchUser();
   }, [userId]);
 
-  // ✅ Fetch unread notification count
+  // ✅ Fetch unread notification count (initially only)
   useEffect(() => {
     const fetchUnreadCount = async () => {
       try {
@@ -53,10 +84,6 @@ export function SocialMediaSidebarComponent() {
     };
 
     if (userId) fetchUnreadCount();
-
-    // Optional: auto-refresh every 10s
-    const interval = setInterval(fetchUnreadCount, 10000);
-    return () => clearInterval(interval);
   }, [userId]);
 
   return (

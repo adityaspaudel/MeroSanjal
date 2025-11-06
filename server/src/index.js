@@ -29,7 +29,7 @@ dbConnect();
 // ------------------ SOCKET.IO SETUP ------------------
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // ✅ Your Next.js frontend
+    origin: "http://localhost:3000", // ✅ My Next.js frontend
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -42,7 +42,7 @@ setSocketInstance(io);
 io.on("connection", (socket) => {
   console.log("⚡ User connected:", socket.id);
 
-  // ✅ Join personal room using userId
+  //  Join personal room using userId
   socket.on("join", (userId) => {
     socket.join(userId);
     console.log(`👤 User ${userId} joined room`);
