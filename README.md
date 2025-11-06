@@ -18,9 +18,6 @@
 
 ## **Phase 1: Essential Features (MVP)**
 
-<details>
-<summary>Click to expand Phase 1</summary>
-
 - [x] **User Authentication & Authorization**
   - [x] Sign up / Log in / Log out
   - [x] JWT-based authentication
@@ -50,14 +47,11 @@
   - [x] Display posts from followed users
   - [x] Display all public posts (optional)
 
-</details>
+
 
 ---
 
 ## **Phase 2: Intermediate Features**
-
-<details>
-<summary>Click to expand Phase 2</summary>
 
 - [x] **Search**
   - [x] Search users by name/email
@@ -73,14 +67,11 @@
 - [x] **Profile Customization**
   - [x] Edit name, bio, address, education, work etc
 
-</details>
+
 
 ---
 
 ## **Phase 3: Advanced / Optional Features**
-
-<details>
-<summary>Click to expand Phase 3</summary>
 
 - [ ] **Direct Messaging (DMs)**
   - [ ] Chat between users
@@ -90,7 +81,7 @@
   - [x] Live updates for posts
   - [x] Live likes/comments count
 
-</details>
+
 
 ---
 
