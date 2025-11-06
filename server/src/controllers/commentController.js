@@ -76,7 +76,7 @@ const updateComment = async (req, res) => {
 const deleteComment = async (req, res) => {
   try {
     const { postId, commentId } = req.params;
-    const { userId } = req.body; // make sure body is used
+    const { userId } = req.body; // to make sure body is used
 
     const post = await Post.findById(postId);
     if (!post) return res.status(404).json({ message: "Post not found" });

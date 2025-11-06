@@ -15,7 +15,7 @@ const {
 } = require("../controllers/postController");
 
 // createPost route
-router.post("/posts", createPost);
+router.post("/posts/createPost", createPost);
 
 // getPosts of followedUsers route
 router.get("/posts/:userId/following", getPostsOfFollowedUsers);

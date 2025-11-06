@@ -23,7 +23,7 @@ const HomeComponent = () => {
   useEffect(() => {
     fetchPosts();
   }, [userId]);
-  // hello
+
   // Fetch All Posts of followed users
   const fetchPosts = async () => {
     try {
@@ -36,11 +36,11 @@ const HomeComponent = () => {
     }
   };
 
-  // Create Post
+  // 🆕Create Post
   const createPost = async () => {
     if (!content.trim()) return;
     try {
-      await axios.post("http://localhost:8000/posts", {
+      await axios.post("http://localhost:8000/posts/createPost", {
         author: userId,
         content,
       });
@@ -51,7 +51,7 @@ const HomeComponent = () => {
     }
   };
 
-  // Update Post
+  // ⬆️Update Post
   const updatePost = async (postId) => {
     if (!editContent.trim()) return;
     try {
@@ -102,7 +102,7 @@ const HomeComponent = () => {
     }
   };
 
-  // Add Comment
+  // ➕ Add Comment
   const addComment = async (postId) => {
     const text = commentText[postId];
     if (!text?.trim()) return;
@@ -129,7 +129,7 @@ const HomeComponent = () => {
     }
   };
 
-  // Update Comment
+  // ✅ Update Comment
   const updateComment = async (postId, commentId) => {
     if (!editCommentText.trim()) return;
 

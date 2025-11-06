@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {React, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
@@ -250,7 +250,7 @@ export default function UserProfile() {
         `http://localhost:8000/posts/${postId}/comments/${commentId}`,
         { userId, text: editCommentText } // only userId and text
       );
-
+console.log("data", data)
       setPosts((prev) =>
         prev.map((p) =>
           p._id === postId
@@ -554,7 +554,7 @@ export default function UserProfile() {
             <div className="h-48 overflow-auto">
               <h1 className="font-bold">Following</h1>
 
-              {following.map((val, ind) => (
+              {following.map((val) => (
                 <div key={val._id}>
                   {" "}
                   <div className="flex flex-col gap-2 hover:bg-green-200 p-2 text-sm rounded-xl bg-gray-100">
@@ -571,7 +571,7 @@ export default function UserProfile() {
             <div className="h-48 overflow-auto">
               <h1 className="font-bold">Followers</h1>
 
-              {followers.map((val, ind) => (
+              {followers.map((val) => (
                 <div key={val._id}>
                   <div className="flex flex-col gap-2 hover:bg-green-200 p-2 text-sm rounded-xl bg-gray-100">
                     {" "}

@@ -1,22 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function IndividualPost() {
   const { userId, postId } = useParams();
-  const [currentPost, setCurrentPost] = useState(null);
-  const [commentText, setCommentText] = useState("");
   const router = useRouter();
 
+  
+  const [currentPost, setCurrentPost] = useState(null);
+  const [commentText, setCommentText] = useState("");
+  const [editCommentText, setEditCommentText] = useState("");
+  const [editingComment, setEditingComment] = useState(null);
+
+  // Fetch single post
   const fetchPost = async () => {
     try {
       const { data } = await axios.get(
         `http://localhost:8000/${userId}/posts/${postId}/getPostById`
       );
       setCurrentPost(data);
-      console.log("Fetched Post:", data);
     } catch (error) {
       console.error("Error fetching individual post:", error);
     }
@@ -26,7 +30,7 @@ export default function IndividualPost() {
     if (postId) fetchPost();
   }, [postId]);
 
-  // ✅ Like / Unlike toggle
+  // ✅ Toggle Like / Unlike
   const toggleLike = async (postId) => {
     try {
       const { data } = await axios.put(
@@ -37,104 +41,82 @@ export default function IndividualPost() {
       setCurrentPost((prev) => ({
         ...prev,
         likes: data.liked
-          ? [...prev.likes, userId] // add like
-          : prev.likes.filter((id) => id !== userId), // remove like
+          ? [...prev.likes, userId]
+          : prev.likes.filter((id) => id !== userId),
       }));
     } catch (error) {
       console.error("Error liking/unliking post:", error);
     }
   };
 
-  // ✅ Add comment
+  // ✅ Add Comment
   const addComment = async () => {
     if (!commentText.trim()) return;
-
     try {
       const { data } = await axios.post(
         `http://localhost:8000/posts/${currentPost._id}/comments`,
-        {
-          userId,
-          text: commentText,
-        }
+        { userId, text: commentText }
       );
 
       setCurrentPost((prev) => ({
         ...prev,
         comments: [...prev.comments, data.comment],
       }));
-
       setCommentText("");
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
 
-  // Update Comment
+  // ✅ Update Comment
   const updateComment = async (postId, commentId) => {
     if (!editCommentText.trim()) return;
-
     try {
       const { data } = await axios.put(
         `http://localhost:8000/posts/${postId}/comments/${commentId}`,
-        { userId, text: editCommentText } // only userId and text
+        { userId, text: editCommentText }
       );
-
-      setPosts((prev) =>
-        prev.map((p) =>
-          p._id === postId
-            ? {
-                ...p,
-                comments: p.comments.map((c) =>
-                  c._id === commentId ? { ...c, text: editCommentText } : c
-                ),
-              }
-            : p
-        )
-      );
+      console.log(data);
+      setCurrentPost((prev) => ({
+        ...prev,
+        comments: prev.comments.map((c) =>
+          c._id === commentId ? { ...c, text: editCommentText } : c
+        ),
+      }));
 
       setEditingComment(null);
       setEditCommentText("");
     } catch (error) {
-      console.error(
-        "Error updating comment:",
-        error.response?.data || error.message
-      );
+      console.error("Error updating comment:", error);
     }
   };
 
-  // Delete Comment
+  // ✅ Delete Comment
   const deleteComment = async (postId, commentId) => {
     try {
       await axios.delete(
         `http://localhost:8000/posts/${postId}/comments/${commentId}`,
-        { data: { userId } } // only send userId
+        { data: { userId } }
       );
 
-      setPosts((prev) =>
-        prev.map((p) =>
-          p._id === postId
-            ? { ...p, comments: p.comments.filter((c) => c._id !== commentId) }
-            : p
-        )
-      );
+      setCurrentPost((prev) => ({
+        ...prev,
+        comments: prev.comments.filter((c) => c._id !== commentId),
+      }));
     } catch (error) {
-      console.error(
-        "Error deleting comment:",
-        error.response?.data || error.message
-      );
+      console.error("Error deleting comment:", error);
     }
   };
 
-  if (!currentPost) {
-    return <p className="p-6">Loading...</p>;
-  }
+  if (!currentPost) return <p className="p-6">Loading...</p>;
 
   const liked = currentPost.likes.includes(userId);
 
   return (
-    <div className="flex flex-col gap-2 items-center content-center p-8 max-w-2xl border rounded shadow min-h-full bg-green-100">
+    <div className="flex flex-col gap-2 items-center p-8 max-w-2xl border rounded shadow min-h-full bg-green-100">
+      {/* 🔙 Back Button */}
       <div
-        className="flex  content-start items-start text-2xl font-bold  w-full"
+        className="flex content-start items-start text-2xl font-bold w-full"
         title="go back"
       >
         <span
@@ -145,18 +127,18 @@ export default function IndividualPost() {
         </span>
       </div>
 
-      {/* Post Details */}
-      <div className=" flex flex-col gap-2 p-4 w-full bg-white rounded-lg shadow border">
-        {/* Author & Date */}
+      {/* ✅ Post Details */}
+      <div className="flex flex-col gap-2 p-4 w-full bg-white rounded-lg shadow border">
+        {/* ✅ Author & Date */}
         <div className="mb-2 flex flex-col gap-2">
           <div className="flex gap-2">
             <img
-              className="rounded-[50%]"
+              className="rounded-full"
               src="/cartoon-cute.jpg"
               height="40px"
               width="40px"
+              alt="Author"
             />
-
             <div className="flex flex-col">
               <h2 className="text-lg font-bold text-gray-800">
                 {currentPost.author.fullName}
@@ -166,11 +148,10 @@ export default function IndividualPost() {
               </p>
             </div>
           </div>
-          {/* Post Content */}
           <p className="text-gray-700 mb-4">{currentPost.content}</p>
         </div>
 
-        {/* Likes */}
+        {/* ✅ Likes */}
         <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
           <button
             onClick={() => toggleLike(currentPost._id)}
@@ -188,32 +169,78 @@ export default function IndividualPost() {
           </span>
         </div>
 
-        {/* Comments */}
+        {/* ✅ Comments Section */}
         <div className="border-t pt-2 flex flex-col content-start items-start">
           <h3 className="text-sm font-semibold text-gray-700 mb-2">Comments</h3>
-          <div className="flex content-start items-start flex-col">
+
+          <div className="flex flex-col gap-2 w-full">
             {currentPost.comments.length === 0 ? (
               <p className="text-sm text-gray-500">No comments yet</p>
             ) : (
               currentPost.comments.map((c) => (
                 <div
                   key={c._id}
-                  className="mb-2 flex gap-2 content-between items-center"
+                  className="flex justify-between items-start bg-gray-50 rounded p-2 w-full"
                 >
-                  <div className="flex gap-2">
-                    <p className="text-sm font-semibold">{c.user.fullName}:</p>
-                    <p className="text-sm text-gray-600">{c.text}</p>
+                  <div className="flex flex-col gap-1">
+                    <p className="text-sm font-semibold">{c.user.fullName}</p>
+
+                    {editingComment === c._id ? (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={editCommentText}
+                          onChange={(e) => setEditCommentText(e.target.value)}
+                          className="border rounded px-2 py-1 text-sm flex-1"
+                        />
+                        <button
+                          onClick={() => updateComment(currentPost._id, c._id)}
+                          className="bg-green-500 text-white px-2 py-1 rounded text-xs"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setEditingComment(null)}
+                          className="bg-gray-400 text-white px-2 py-1 rounded text-xs"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-700">{c.text}</p>
+                    )}
+                    <p className="text-xs text-gray-400">
+                      {new Date(c.createdAt).toLocaleString()}
+                    </p>
                   </div>
-                  <p className="text-xs text-gray-400 flex content-end items-end">
-                    {new Date(c.createdAt).toLocaleString()}
-                  </p>
+
+                  {/* ✅ Edit & Delete Buttons */}
+                  {c.user._id === userId && (
+                    <div className="flex gap-2 text-xs">
+                      <button
+                        onClick={() => {
+                          setEditingComment(c._id);
+                          setEditCommentText(c.text);
+                        }}
+                        className="text-blue-600 hover:underline"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => deleteComment(currentPost._id, c._id)}
+                        className="text-red-600 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))
             )}
           </div>
 
-          {/* Input for new comment */}
-          <div className="mt-3 flex gap-2">
+          {/* ✅ Add new comment */}
+          <div className="mt-3 flex gap-2 w-full">
             <input
               type="text"
               value={commentText}
