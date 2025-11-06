@@ -1,6 +1,13 @@
 const Notification = require("../models/notificationModel");
 const mongoose = require("mongoose");
 
+// We’ll inject io (Socket.IO instance) into this module from your main server file.
+let io;
+const setSocketInstance = (socketInstance) => {
+  io = socketInstance;
+};
+
+// ========== CREATE NOTIFICATION ==========
 const createNotification = async ({
   recipient,
   sender,
@@ -10,6 +17,7 @@ const createNotification = async ({
 }) => {
   try {
     if (recipient.toString() === sender.toString()) return;
+
     const newNotification = new Notification({
       recipient,
       sender,
@@ -17,21 +25,40 @@ const createNotification = async ({
       post: postId || null,
       message,
     });
+
     await newNotification.save();
+
+    // ✅ Emit real-time notification to recipient
+    if (io) {
+      io.to(recipient.toString()).emit("newNotification", {
+        message: "New notification received",
+        notification: newNotification,
+      });
+
+      // Also emit updated unread count
+      const unreadCount = await Notification.countDocuments({
+        recipient,
+        isRead: false,
+      });
+      io.to(recipient.toString()).emit("updateUnreadCount", {
+        count: unreadCount,
+      });
+    }
   } catch (error) {
     console.error("❌ Error creating notification:", error.message);
   }
 };
 
-// get notifications
-// ---------------- GET /users/:userId/notifications ----------------
+// ========== GET ALL NOTIFICATIONS ==========
 const getNotifications = async (req, res) => {
   try {
     const { userId } = req.params;
+
     const notifications = await Notification.find({ recipient: userId })
       .populate("sender", "fullName email")
       .populate("post", "content")
       .sort({ createdAt: -1 });
+
     res.status(200).json({ notifications });
   } catch (error) {
     console.error("Error fetching notifications:", error.message);
@@ -39,8 +66,7 @@ const getNotifications = async (req, res) => {
   }
 };
 
-// ---------------- PUT /users/:userId/notifications/:notificationId/read ----------------
-
+// ========== MARK AS READ ==========
 const readUnreadNotifications = async (req, res) => {
   try {
     const { notificationId } = req.params;
@@ -54,6 +80,17 @@ const readUnreadNotifications = async (req, res) => {
     if (!notification)
       return res.status(404).json({ message: "Notification not found" });
 
+    // ✅ Emit updated unread count
+    if (io) {
+      const unreadCount = await Notification.countDocuments({
+        recipient: notification.recipient,
+        isRead: false,
+      });
+      io.to(notification.recipient.toString()).emit("updateUnreadCount", {
+        count: unreadCount,
+      });
+    }
+
     res.json({ message: "Marked as read", notification });
   } catch (error) {
     console.error("Error updating notification:", error.message);
@@ -61,13 +98,16 @@ const readUnreadNotifications = async (req, res) => {
   }
 };
 
+// ========== GET UNREAD COUNT ==========
 const getUnreadNotificationCount = async (req, res) => {
   try {
     const { userId } = req.params;
+
     const count = await Notification.countDocuments({
       recipient: userId,
       isRead: false,
     });
+
     res.status(200).json({ count });
   } catch (error) {
     console.error("Error fetching unread count:", error.message);
@@ -80,4 +120,5 @@ module.exports = {
   getNotifications,
   readUnreadNotifications,
   getUnreadNotificationCount,
+  setSocketInstance,
 };
