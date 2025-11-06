@@ -1,35 +1,67 @@
-const mongoose = require("mongoose");
 const express = require("express");
-const app = express();
-const router = express.Router();
-
+const http = require("http");
+const { Server } = require("socket.io");
 const cors = require("cors");
-
 const dotenv = require("dotenv");
-dotenv.config();
-
 const dbConnect = require("./db/connection");
 
+// Routes
 const userRoute = require("./routes/userRoute");
 const postRoute = require("./routes/postRoute");
 const commentRoute = require("./routes/commentRoute");
 const notificationRoute = require("./routes/notificationRoute");
 
-// middleware
+// Import controller to inject socket instance
+const { setSocketInstance } = require("./controllers/notificationController");
+
+dotenv.config();
+
+// ------------------ APP SETUP ------------------
+const app = express();
+const server = http.createServer(app);
+
 app.use(cors());
 app.use(express.json());
 
-// database Connection
+// ------------------ DATABASE ------------------
 dbConnect();
 
-// routes
+// ------------------ SOCKET.IO SETUP ------------------
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000", // ✅ My Next.js frontend
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+// Pass socket.io instance to controllers
+setSocketInstance(io);
+
+// Handle socket connection
+io.on("connection", (socket) => {
+  console.log("⚡ User connected:", socket.id);
+
+  //  Join personal room using userId
+  socket.on("join", (userId) => {
+    socket.join(userId);
+    console.log(`👤 User ${userId} joined room`);
+  });
+
+  // Handle disconnection
+  socket.on("disconnect", () => {
+    console.log("❌ User disconnected:", socket.id);
+  });
+});
+
+// ------------------ ROUTES ------------------
 app.use(userRoute);
 app.use(postRoute);
 app.use(commentRoute);
 app.use(notificationRoute);
 
-// application
-const port = process.env.PORT || 8000;
-app.listen(port, () =>
-  console.log(`🚀 Server running at http://localhost:${port}`)
-);
+// ------------------ SERVER LISTEN ------------------
+const PORT = process.env.PORT || 8000;
+server.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});

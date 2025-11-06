@@ -1,30 +1,61 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { FaConnectdevelop, FaUserAlt } from "react-icons/fa";
 import {
   IoHomeSharp,
   IoLogOut,
-  IoSettings,
   IoSettingsSharp,
+  IoMail,
 } from "react-icons/io5";
 import { RiSearchFill } from "react-icons/ri";
 import { FaBell } from "react-icons/fa";
-import { IoMail } from "react-icons/io5";
-
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { io } from "socket.io-client"; // ✅ import socket.io-client
 
 export function SocialMediaSidebarComponent() {
   const params = useParams();
   const { userId } = params; // ✅ extract userId from route
   const [user, setUser] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
-  // Fetch user info from backend
+  // ✅ Socket instance
+  const [socket, setSocket] = useState(null);
+
+  // ✅ Fix: use the socket variable so ESLint doesn't warn
+  useEffect(() => {
+    if (socket) {
+      console.log("🟢 Socket connected:", socket.id);
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:8000", {
+      transports: ["websocket"],
+    });
+
+    setSocket(newSocket);
+
+    if (userId) {
+      newSocket.emit("join", userId);
+    }
+
+    newSocket.on("updateUnreadCount", (data) => {
+      setUnreadCount(data.count);
+    });
+
+    newSocket.on("newNotification", (data) => {
+      console.log("🔔 New notification:", data);
+    });
+
+    return () => newSocket.disconnect();
+  }, [userId]);
+
+  // ✅ Fetch user info
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -39,11 +70,28 @@ export function SocialMediaSidebarComponent() {
     if (userId) fetchUser();
   }, [userId]);
 
+  // ✅ Fetch unread notification count (initially only)
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:8000/users/${userId}/notifications/unreadNotificationCount`
+        );
+        setUnreadCount(data.count);
+      } catch (err) {
+        console.error("Error fetching unread count:", err);
+      }
+    };
+
+    if (userId) fetchUnreadCount();
+  }, [userId]);
+
   return (
     <div
-      className="flex flex-col left-0 top-0 sticky h-screen w-[80px] sm:w-[100px] md:w-[100px] xl:w-[350px]  
-		  bg-green-100 justify-between border-r p-4"
+      className="flex flex-col left-0 top-0 sticky h-screen w-[80px] sm:w-[100px] md:w-[100px] xl:w-[350px]
+      bg-green-100 justify-between border-r p-4"
     >
+      {/* -------- TOP SECTION -------- */}
       <div className="space-y-4 w-full ">
         <Link href={`/${userId}/home`} className="flex gap-2 px-4">
           <FaConnectdevelop className="text-2xl" />
@@ -52,17 +100,20 @@ export function SocialMediaSidebarComponent() {
           </h2>
         </Link>
 
-        {/* Nav links */}
+        {/* -------- NAV LINKS -------- */}
         <div className="space-y-1">
+          {/* Home */}
           <Link href={`/${userId}/home`}>
             <Button
               variant="ghost"
               className="w-full justify-start hover:bg-gray-100"
             >
               <IoHomeSharp />
-              <span className="hidden md:block">Home</span>
+              <span className="hidden md:block ml-2">Home</span>
             </Button>
           </Link>
+
+          {/* Search */}
           <Link href={`/${userId}/search`}>
             <Button
               variant="ghost"
@@ -76,37 +127,52 @@ export function SocialMediaSidebarComponent() {
               />
             </Button>
           </Link>
+
+          {/* Notifications (with badge) */}
           <Link href={`/${userId}/notifications`}>
             <Button
               variant="ghost"
-              className="w-full justify-start hover:bg-gray-100"
+              className="relative w-full justify-start hover:bg-gray-100"
             >
-              <FaBell />
-              <span className="hidden md:block">Notifications</span>
+              <FaBell className="text-xl" />
+              {/* ✅ Badge */}
+              {unreadCount > 0 && (
+                <span
+                  className="absolute top-1 left-6 bg-red-500 text-white text-[10px]
+                  font-bold rounded-full h-4 w-4 flex items-center justify-center"
+                >
+                  {unreadCount > 10 ? "10+" : unreadCount}
+                </span>
+              )}
+              <span className="hidden md:block ml-2">Notifications</span>
             </Button>
           </Link>
+
+          {/* Messages */}
           <Link href={`/${userId}/messages`}>
             <Button
               variant="ghost"
               className="w-full justify-start hover:bg-gray-100"
             >
               <IoMail />
-              <span className=" hidden md:block">Messages</span>
+              <span className=" hidden md:block ml-2">Messages</span>
             </Button>
           </Link>
+
+          {/* Profile */}
           <Link href={`/${userId}/profile`}>
             <Button
               variant="ghost"
               className="w-full justify-start hover:bg-gray-100"
             >
               <FaUserAlt />
-              <span className="hidden md:block">Profile</span>
+              <span className="hidden md:block ml-2">Profile</span>
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* User info + settings */}
+      {/* -------- BOTTOM SECTION (User Info + Settings + Logout) -------- */}
       <div className="space-y-1 p-2">
         {user && (
           <div className="flex items-center space-x-2 rounded-md border hover:bg-gray-100">
@@ -129,27 +195,27 @@ export function SocialMediaSidebarComponent() {
           </div>
         )}
 
-        <div>
-          <Link href={`/${userId}/userSettings`}>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-100"
-            >
-              <IoSettingsSharp />
-              <span className="logout hidden md:block">Setting</span>
-            </Button>
-          </Link>
+        {/* Settings */}
+        <Link href={`/${userId}/userSettings`}>
+          <Button
+            variant="ghost"
+            className="w-full justify-start hover:bg-gray-100"
+          >
+            <IoSettingsSharp />
+            <span className="logout hidden md:block ml-2">Setting</span>
+          </Button>
+        </Link>
 
-          <Link href="/">
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-gray-100 font-bold"
-            >
-              <IoLogOut />
-              <span className="logout hidden md:block">Logout</span>
-            </Button>
-          </Link>
-        </div>
+        {/* Logout */}
+        <Link href="/">
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-gray-100 font-bold"
+          >
+            <IoLogOut />
+            <span className="logout hidden md:block ml-2">Logout</span>
+          </Button>
+        </Link>
       </div>
     </div>
   );
