@@ -19,7 +19,7 @@ const RecoverAccount = () => {
   };
 
   return (
-    <div className="flex justify-center items-center bg-green-100 h-screen w-screen">
+    <div className="flex justify-center items-center bg-green-200 h-screen w-screen">
       <div className="flex flex-col content-start items-start w-full max-w-xl p-6 bg-white rounded-lg shadow-md border-gray-200 border-2">
         <div className="flex gap-2 content-start  items-start w-full">
           <Link

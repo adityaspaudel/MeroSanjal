@@ -50,6 +50,7 @@ const RegistrationForm = () => {
         console.log("Response Data:", response.data);
         alert("Registration Successful!");
         router.push("./login");
+        resetForm();
       } catch (error) {
         console.error(
           "Error during registration:",
@@ -58,15 +59,17 @@ const RegistrationForm = () => {
         alert(
           error.response?.data?.msg || "Registration failed. Please try again."
         );
+      } finally {
+        console.log("task completed")
       }
     },
   });
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-green-200">
       <form
         onSubmit={formik.handleSubmit}
-        className="w-full max-w-md p-6 bg-white rounded shadow"
+        className="w-full max-w-md px-10 py-6 bg-white rounded shadow shadow-gray-400 transition 3s hover:shadow-md hover:shadow-black"
       >
         <h2 className="mb-6 text-2xl font-bold text-center">Register</h2>
 

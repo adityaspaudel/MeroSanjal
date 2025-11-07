@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {React, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 export default function NotificationsPage() {
@@ -86,56 +86,54 @@ export default function NotificationsPage() {
 
   // ✅ Main render
   return (
-    <div className="max-w-2xl mx-auto  p-4 bg-green-100 h-full">
-      <h1 className="text-2xl font-semibold mb-6">Notifications</h1>
-
-      <div className="space-y-4">
-        {notifications.map((notification) => (
-          <div
-            key={notification._id}
-            className={`p-4 rounded-lg shadow transition ${
-              notification.isRead
-                ? "bg-gray-100 border border-gray-200"
-                : "bg-green-200 border border-blue-100"
-            }`}
-          >
-            {/* Notification message */}
-            <p className="text-gray-800">
-              <strong>{notification.sender?.fullName || "Someone"}</strong>{" "}
-              {notification.type === "like" && "liked your post."}
-              {notification.type === "comment" && "commented on your post."}
-              {notification.type === "follow" && "started following you."}
-              {!notification.type && notification.message && (
-                <> {notification.message}</>
-              )}
-            </p>
-
-            {/* Optional post info */}
-            {notification.post && (
-              <p className="text-sm text-gray-500 mt-1 italic">
-                “{notification.post.content.slice(0, 60)}...”
+    <div className="bg-green-200 p-6 ">
+      <div className="max-w-2xl mx-auto  p-4 bg-green-100 h-full rounded-lg">
+        <h1 className="text-2xl font-semibold mb-6">Notifications</h1>
+        <div className="space-y-4">
+          {notifications.map((notification) => (
+            <div
+              key={notification._id}
+              className={`p-4 rounded-lg shadow transition ${
+                notification.isRead
+                  ? "bg-gray-100 border border-gray-200"
+                  : "bg-green-200 border border-blue-100"
+              }`}
+            >
+              {/* Notification message */}
+              <p className="text-gray-800">
+                <strong>{notification.sender?.fullName || "Someone"}</strong>{" "}
+                {notification.type === "like" && "liked your post."}
+                {notification.type === "comment" && "commented on your post."}
+                {notification.type === "follow" && "started following you."}
+                {!notification.type && notification.message && (
+                  <> {notification.message}</>
+                )}
               </p>
-            )}
-
-            {/* Footer (timestamp + actions) */}
-            <div className="flex justify-between items-center mt-3 text-sm">
-              <span className="text-gray-400">
-                {new Date(notification.createdAt).toLocaleString()}
-              </span>
-
-              {notification.isRead ? (
-                <span className="text-green-600 font-medium">Read</span>
-              ) : (
-                <button
-                  onClick={() => markAsRead(notification._id)}
-                  className="text-blue-600 hover:underline"
-                >
-                  Mark as Read
-                </button>
+              {/* Optional post info */}
+              {notification.post && (
+                <p className="text-sm text-gray-500 mt-1 italic">
+                  “{notification.post.content.slice(0, 60)}...”
+                </p>
               )}
+              {/* Footer (timestamp + actions) */}
+              <div className="flex justify-between items-center mt-3 text-sm">
+                <span className="text-gray-400">
+                  {new Date(notification.createdAt).toLocaleString()}
+                </span>
+                {notification.isRead ? (
+                  <span className="text-green-600 font-medium">Read</span>
+                ) : (
+                  <button
+                    onClick={() => markAsRead(notification._id)}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Mark as Read
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
