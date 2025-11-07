@@ -4,11 +4,11 @@
 
 - Frontend: Next js App Router with Javascript & Tailwind CSS
 - Backend: Express.js with Mongodb
-- Styling: Tailwind CSS, NextUI, Shadcn  
-- Icons: React Icons, Lucide React  
-- Form Handling: Formik with Yup validation  
-- AI-Assisted Development: V0.dev, ChatGPT, Gemini 
-- Utilities: util  
+- Styling: Tailwind CSS, NextUI, Shadcn
+- Icons: React Icons, Lucide React
+- Form Handling: Formik with Yup validation
+- AI-Assisted Development: V0.dev, ChatGPT, Gemini
+- Utilities: util
 
 ---
 
@@ -22,65 +22,67 @@
   - [x] Sign up / Log in / Log out
   - [x] JWT-based authentication
   - [x] Password hashing (bcrypt)
-  
 - [x] **User Profiles**
+
   - [x] View profile
   - [x] Edit profile (name, bio, address, education, work etc)
   - [x] Follow / Unfollow users
 
 - [x] **Posts**
+
   - [x] Create post (text)
   - [x] Read posts (feed)
   - [x] Update post
   - [x] Delete post
 
 - [x] **Likes / Reactions**
+
   - [x] Like / Unlike posts
   - [x] Display number of likes
 
 - [x] **Comments**
+
   - [x] Add comment
   - [x] Edit comment
-  - [x] Delete comment 
+  - [x] Delete comment
 
 - [x] **Feed / Timeline**
   - [x] Display posts from followed users
   - [x] Display all public posts (optional)
-
-
 
 ---
 
 ## **Phase 2: Intermediate Features**
 
 - [x] **Search**
+
   - [x] Search users by name/email
 
 - [x] **Notifications**
+
   - [x] Notify when someone likes a post
   - [x] Notify when someone comments
   - [x] Notify when someone follows
 
-- [ ] **Post Media**
-  - [ ] Upload images with posts
+- [x] **Post Media**
+
+  - [x] Upload images with posts
 
 - [x] **Profile Customization**
   - [x] Edit name, bio, address, education, work etc
 
-
-
 ---
 
-## **Phase 3: Advanced / Optional Features**
+## **Phase 3: Advanced / Optional Features with Socket.io Integration**
 
 - [x] **Real-time Feed Updates**
+
   - [x] Live updates for posts
   - [x] Live likes/comments count
 
 - [ ] **Direct Messaging (DMs)**
   - [ ] Chat between users
   - [ ] Real-time using Socket.io
-
 
 ---
 
