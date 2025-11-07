@@ -1,24 +1,41 @@
 const mongoose = require("mongoose");
 
 const Post = require("../models/postModel");
-const {createNotification} = require("./notificationController");
+const { createNotification } = require("./notificationController");
 const User = require("../models/userModel");
+const path = require("path");
 
-// createPost controller
+// ✅ createPost controller
 const createPost = async (req, res) => {
   try {
-    const { author, title, content } = req.body;
-    if (!author || !content)
-      return res.status(400).json({ message: "All fields required" });
+    const { author, content } = req.body;
 
-    const post = await Post.create({ author, content });
-    res.status(201).json({ message: "Post created", post });
+    if (!author || !content) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
+    // Get image file paths
+    const imagePaths = req.files
+      ? req.files.map((file) => `/uploads/posts/${path.basename(file.path)}`)
+      : [];
+
+    const post = await Post.create({
+      author,
+      content,
+      imagesUrl: imagePaths,
+    });
+
+    res.status(201).json({
+      message: "Post created successfully",
+      post,
+    });
   } catch (err) {
+    console.error("Error creating post:", err);
     res.status(500).json({ message: "Error creating post" });
   }
 };
 
-// getPosts of followed User controller
+// ✅getPosts of followed User controller
 const getPostsOfFollowedUsers = async (req, res) => {
   try {
     const { userId } = req.params; // logged-in user ID

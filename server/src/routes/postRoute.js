@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const upload = require("../middlewares/multerConfig");
 
 const {
   createPost,
@@ -15,7 +15,7 @@ const {
 } = require("../controllers/postController");
 
 // createPost route
-router.post("/posts/createPost", createPost);
+router.post("/posts/createPost", upload.array("images", 5), createPost);
 
 // getPosts of followedUsers route
 router.get("/posts/:userId/following", getPostsOfFollowedUsers);
