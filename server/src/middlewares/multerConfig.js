@@ -5,11 +5,8 @@ const path = require("path");
 // Define storage engine
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../uploads/rooms");
-
-    // Create directory if it doesn't exist
+    const uploadPath = path.join(__dirname, "../uploads/posts"); // ✅ Fixed from "rooms" → "posts"
     fs.mkdirSync(uploadPath, { recursive: true });
-
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
@@ -21,7 +18,5 @@ const storage = multer.diskStorage({
   },
 });
 
-// Create multer instance
 const upload = multer({ storage });
-
 module.exports = upload;
