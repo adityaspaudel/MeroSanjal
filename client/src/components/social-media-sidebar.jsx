@@ -177,7 +177,7 @@ export function SocialMediaSidebarComponent() {
                 className="flex items-center gap-2 "
               >
                 <Avatar>
-                  <AvatarImage src="/cartoon-cute.jpg" alt={user.fullName} />
+                  <AvatarImage src="/blank-pp.jpg" alt={user.fullName} />
                 </Avatar>
                 <div className="flex flex-col">
                   <p className="text-sm font-medium leading-none hidden md:block">

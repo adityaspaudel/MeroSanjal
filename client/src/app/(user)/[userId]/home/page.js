@@ -205,6 +205,7 @@ const HomeComponent = () => {
           multiple
           onChange={handleImageChange}
           className="mb-2"
+          title="Upload images"
         />
         {/* ✅ Image Previews */}
         <div className="flex gap-2 flex-wrap mb-2">

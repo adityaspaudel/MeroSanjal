@@ -294,6 +294,27 @@ const getUserFollowers = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+const getFollowingFriendsList = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const currentUser = await User.findById({ _id: userId }).populate(
+      "following",
+      "_id fullName email"
+    );
+
+    if (!currentUser) {
+      res.status(204).json({ message: "user does not exist" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "friends list fetched successfully", currentUser });
+  } catch (error) {
+    console.error(error);
+  }
+};
 module.exports = {
   userRegistration,
   userLogin,
@@ -305,4 +326,5 @@ module.exports = {
   getAllRegisteredUser,
   getUserFollowing,
   getUserFollowers,
+  getFollowingFriendsList,
 };

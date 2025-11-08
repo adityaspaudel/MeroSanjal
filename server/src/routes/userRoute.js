@@ -12,6 +12,7 @@ const {
   getAllRegisteredUser,
   getUserFollowing,
   getUserFollowers,
+  getFollowingFriendsList,
 } = require("../controllers/userController");
 
 // userRegistration route
@@ -38,5 +39,7 @@ router.get("/user/:userId", getUserById);
 // getAllRegisteredUser route
 router.get("/getAllUsers", getAllRegisteredUser);
 
+// getFollowingFriendsList
+router.get("/users/:userId/getFollowingFriendsList", getFollowingFriendsList);
 
 module.exports = router;
