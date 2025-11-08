@@ -30,6 +30,7 @@ const HomeComponent = () => {
       setPosts(data.posts || []);
     } catch (error) {
       console.error("Error fetching posts:", error);
+      alert(JSON.stringify(error, 2, 2));
     }
   };
 
@@ -62,7 +63,8 @@ const HomeComponent = () => {
       setImages([]);
       fetchPosts();
     } catch (error) {
-      console.error("Error creating post:", error);
+      // console.error("Error creating post:", error);
+      alert(JSON.stringify(error, 2, 2));
     }
   };
 
