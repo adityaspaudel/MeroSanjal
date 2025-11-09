@@ -130,10 +130,10 @@ export default function IndividualPost() {
       <div className="flex flex-col gap-2 p-4 w-full bg-white rounded-lg shadow border">
         {/* ✅ Author & Date */}
         <div className="mb-2 flex flex-col gap-2">
-          <div className="flex gap-2">
+          <div className="flex gap-2 p-2">
             <img
-              className="rounded-full"
-              src="/cartoon-cute.jpg"
+              className="rounded-full  object-cover h-10 w-10"
+              src="/blank-pp.jpg"
               height="40px"
               width="40px"
               alt="Author"

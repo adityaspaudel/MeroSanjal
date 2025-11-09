@@ -189,7 +189,7 @@ const HomeComponent = () => {
   };
 
   return (
-    <div className="p-6 w-full mx-auto bg-green-200">
+    <div className="p-6 w-full mx-auto min-h-full bg-green-200">
       {/* ✅ Create Post */}
       <div className="mb-6 w-full">
         <textarea
@@ -242,7 +242,7 @@ const HomeComponent = () => {
               <Link href={`/${userId}/posts/${post._id}`} className="block">
                 <div className="flex gap-2">
                   <img
-                    src={post.author?.profilePic || "/cartoon-cute.jpg"}
+                    src={post.author?.profilePic || "/blank-pp.jpg"}
                     alt="profile"
                     className="w-10 h-10 rounded-full"
                   />
