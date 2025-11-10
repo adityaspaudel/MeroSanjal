@@ -5,6 +5,14 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 const HomeComponent = () => {
   const { userId } = useParams();
   // const author = userId;
@@ -282,17 +290,38 @@ const HomeComponent = () => {
                 </div>
               ) : (
                 <>
-                  <p className="mt-2 text-gray-900 text-lg">{post.content}</p>
+                  <p className="mt-2 text-green-900  text-center text-4xl ">
+                    {post.content}
+                  </p>
                   {/* ✅ Show uploaded images */}
                   {post.imagesUrl?.length > 0 && (
-                    <div className="flex gap-2 flex-wrap mt-2">
+                    <div className="flex gap-2 flex-wrap justify-center items-center mt-2">
+                      {/* 🔴 here is dialog box  */}
                       {post.imagesUrl.map((img, idx) => (
-                        <img
-                          key={idx}
-                          src={`${img}`}
-                          alt={`post-${idx}`}
-                          className="w-32 h-32 object-cover rounded border"
-                        />
+                        <Dialog key={idx}>
+                          <form>
+                            <DialogTrigger asChild>
+                              <img
+                                key={idx}
+                                src={`${img}`}
+                                alt={`post-${idx}`}
+                                className="w-32 h-32 object-cover rounded border cursor-pointer"
+                                title="open image"
+                              />
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[800px] sm:max-h-[600px] flex flex-col justify-center items-center bg-green-200">
+                              <DialogHeader>
+                                <DialogTitle></DialogTitle>
+                              </DialogHeader>
+                              <img
+                                key={idx}
+                                src={`${img}`}
+                                alt={`post-${idx}`}
+                                className="h-[600px]  rounded border"
+                              />
+                            </DialogContent>
+                          </form>
+                        </Dialog>
                       ))}
                     </div>
                   )}

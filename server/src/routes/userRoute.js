@@ -39,6 +39,11 @@ router.get("/user/:userId", getUserById);
 // getAllRegisteredUser route
 router.get("/getAllUsers", getAllRegisteredUser);
 
+// get followings
+router.get("/getUserFollowing", getUserFollowing);
+
+// get followers
+router.get("/getUserFollowers", getUserFollowers);
 // getFollowingFriendsList
 router.get("/users/:userId/getFollowingFriendsList", getFollowingFriendsList);
 
