@@ -1,6 +1,6 @@
 "use client";
 
-import {React, useEffect, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
@@ -250,7 +250,7 @@ export default function UserProfile() {
         `http://localhost:8000/posts/${postId}/comments/${commentId}`,
         { userId, text: editCommentText } // only userId and text
       );
-console.log("data", data)
+      console.log("data", data);
       setPosts((prev) =>
         prev.map((p) =>
           p._id === postId
@@ -306,8 +306,8 @@ console.log("data", data)
       <div className="mb-6 flex items-center gap-4">
         <div className="w-16 h-16 rounded-full bg-blue-300 flex items-center justify-center text-gray-600 font-bold text-2xl ">
           <img
-            className="rounded-[50%]"
-            src="/cartoon-cute.jpg"
+            className="rounded-[50%] object-cover"
+            src="/blank-pp.jpg"
             height="80px"
             width="80px"
           />
@@ -602,7 +602,7 @@ console.log("data", data)
                   <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold">
                     <img
                       className="rounded-[50%]"
-                      src="/cartoon-cute.jpg"
+                      src="/blank-pp.jpg"
                       height="80px"
                       width="80px"
                     />
@@ -647,18 +647,35 @@ console.log("data", data)
                   <p className="text-sm text-gray-500">No comments yet</p>
                 ) : (
                   post.comments.map((c) => (
-                    <div key={c._id} className="mb-2 flex gap-2 text-sm">
-                      <div className="flex gap-2">
-                        <p className="text-sm font-semibold">
-                          {c.user.fullName}:
+                    <div
+                      key={c._id}
+                      className="mb-2 flex justify-between items-center gap-2 text-sm"
+                    >
+                      <div>
+                        <div className="flex gap-2">
+                          <p className="text-sm font-semibold">
+                            {c.user.fullName}:
+                          </p>
+                          <p className="text-sm text-gray-600">{c.text}</p>
+                        </div>
+                        <p className="text-xs text-gray-400">
+                          {new Date(c.createdAt).toLocaleString()}
                         </p>
-                        <p className="text-sm text-gray-600">{c.text}</p>
                       </div>
-                      <p className="text-xs text-gray-400">
-                        {new Date(c.createdAt).toLocaleString()}
-                      </p>
-                      <button onClick={updateComment}>edit</button>
-                      <button onClick={deleteComment}>delete</button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={updateComment}
+                          className="bg-gray-400 hover:bg-gray-500 rounded-md px-2 text-white"
+                        >
+                          edit
+                        </button>
+                        <button
+                          onClick={deleteComment}
+                          className="bg-red-500 hover:bg-red-600 rounded-md px-2 text-white"
+                        >
+                          delete
+                        </button>
+                      </div>
                       {editingComment && (
                         <input type="text" placeholder="enter" value="" />
                       )}
