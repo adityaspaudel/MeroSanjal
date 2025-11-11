@@ -11,6 +11,7 @@ const userRoute = require("./routes/userRoute");
 const postRoute = require("./routes/postRoute");
 const commentRoute = require("./routes/commentRoute");
 const notificationRoute = require("./routes/notificationRoute");
+const messageRoute = require("./routes/messageRoute");
 
 // Import controller to inject socket instance
 const { setSocketInstance } = require("./controllers/notificationController");
@@ -62,6 +63,7 @@ app.use(userRoute);
 app.use(postRoute);
 app.use(commentRoute);
 app.use(notificationRoute);
+app.use(messageRoute);
 
 // ------------------ SERVER LISTEN ------------------
 const PORT = process.env.PORT || 8000;
