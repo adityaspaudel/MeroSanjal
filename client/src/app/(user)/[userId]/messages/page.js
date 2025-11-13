@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -30,17 +32,27 @@ const UserMessageDashboard = () => {
     <main className="min-h-full bg-green-200 overflow-auto text-black p-6">
       <div className="text-2xl font-bold">User Message Dashboard</div>
       {userDetails && (
-        <div className=" flex flex-col gap-2 w-80">
+        <div className=" flex flex-col gap-2 ">
           {userDetails.currentUser.following.map((user) => (
             <div
               key={user._id}
-              className="flex justify-between items-center bg-gray-100 hover:bg-green-300 p-2 rounded-md"
+              className="flex justify-start items-center bg-gray-100 gap-4 hover:bg-green-300 p-2 rounded-md"
             >
-              <div className="flex flex-col">
-                <div>{user.fullName}</div>
-                <div>{user.email}</div>
+              <div>
+                <Image
+                  src="/blank-pp.jpg"
+                  className="rounded-full"
+                  height={50}
+                  width={50}
+                  alt="pp"
+                />
               </div>
-              <button>Message</button>
+              <Link href={`/${userId}/messages/${user._id}`}>
+                <div className="flex flex-col">
+                  <div>{user.fullName}</div>
+                  <div>{user.email}</div>
+                </div>
+              </Link>
             </div>
           ))}
         </div>
