@@ -1,7 +1,6 @@
 const Message = require("../models/messageModel");
 
 // ✅ Send or Add a Message between two users
-// controllers/messageController.js
 const sendMessage = async (req, res) => {
   try {
     const { sender, receiver, text } = req.body; // ✅ get from body
