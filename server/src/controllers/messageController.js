@@ -1,20 +1,18 @@
 const Message = require("../models/messageModel");
 
 // ✅ Send or Add a Message between two users
+// controllers/messageController.js
 const sendMessage = async (req, res) => {
   try {
-    const { sender, receiver, text } = req.body;
-
+    const { sender, receiver, text } = req.body; // ✅ get from body
     if (!sender || !receiver || !text) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    // ✅ Check if a conversation between both users exists
     let conversation = await Message.findOne({
       participants: { $all: [sender, receiver] },
     });
 
-    // ✅ Create new conversation if not found
     if (!conversation) {
       conversation = new Message({
         participants: [sender, receiver],
@@ -22,7 +20,6 @@ const sendMessage = async (req, res) => {
       });
     }
 
-    // ✅ Push new message
     conversation.messages.push({ sender, text });
     await conversation.save();
 
@@ -32,10 +29,7 @@ const sendMessage = async (req, res) => {
       data: conversation,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
