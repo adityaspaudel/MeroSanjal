@@ -83,10 +83,10 @@ export default function ChatBoard() {
   setTimeout(() => {
     fetchMessages();
   }, [10000]);
-  
+
   console.log(messages);
   return (
-    <main className="max-w-md mx-auto mt-10 p-4 border rounded-xl shadow-lg bg-gray-50">
+    <main className=" mx-auto  p-4 border  shadow-lg bg-green-200 h-full">
       <h2 className="text-lg font-semibold text-center mb-4 text-gray-800">
         Chat between{" "}
         <div className="flex justify-between items-center">
