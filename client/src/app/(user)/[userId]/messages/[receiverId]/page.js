@@ -2,46 +2,38 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import io from "socket.io-client";
+
+// Connect to backend socket server
+const socket = io("http://localhost:8000");
 
 export default function ChatBoard() {
   const { userId, receiverId } = useParams();
+
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
-  const [sender, setSender] = useState(userId);
-  const [receiver, setReceiver] = useState(receiverId);
+  const [sender, setSender] = useState(null);
+  const [receiver, setReceiver] = useState(null);
 
-  // get sender
-  const getSender = useCallback(async () => {
-    try {
-      const response = await fetch(`http://localhost:8000/user/${userId}`);
-      const data = await response.json();
-      setSender(data);
-    } catch (error) {
-      console.error("error occurred");
-    } finally {
-      console.log("completed");
-    }
-  }, [userId]);
+  // ------------------ FETCH USER DATA ------------------
 
-  // get receiver
-  const getReceiver = useCallback(async () => {
+  const fetchUser = async (id, setUser) => {
     try {
-      const response = await fetch(`http://localhost:8000/user/${receiverId}`);
+      const response = await fetch(`http://localhost:8000/user/${id}`);
       const data = await response.json();
-      setReceiver(data);
-    } catch (error) {
-      console.error("error occurred");
-    } finally {
-      console.log("completed");
+      setUser(data);
+    } catch (e) {
+      console.error("User fetch error", e);
     }
-  }, [receiverId]);
+  };
 
   useEffect(() => {
-    getSender();
-    getReceiver();
-  }, [getSender, getReceiver]);
+    fetchUser(userId, setSender);
+    fetchUser(receiverId, setReceiver);
+  }, [userId, receiverId]);
 
-  // ✅ Fetch all messages
+  // ------------------ FETCH OLD MESSAGES ------------------
+
   const fetchMessages = useCallback(async () => {
     try {
       const res = await fetch(
@@ -54,76 +46,92 @@ export default function ChatBoard() {
     }
   }, [userId, receiverId]);
 
-  // ✅ Send message
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
+
+  // ------------------ SOCKET JOIN ------------------
+
+  useEffect(() => {
+    if (userId) {
+      socket.emit("join", userId);
+    }
+
+    // Listen for new incoming messages
+    socket.on("newMessage", (msg) => {
+      console.log("📩 Real-time message received:", msg);
+      setMessages((prev) => [...prev, msg]);
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [userId]);
+
+  // ------------------ SEND MESSAGE ------------------
+
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim()) return;
 
     try {
-      const res = await fetch("http://localhost:8000/messages/sendMessage", {
+      await fetch("http://localhost:8000/messages/sendMessage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sender: userId, receiver: receiverId, text }),
+        body: JSON.stringify({
+          sender: userId,
+          receiver: receiverId,
+          text,
+        }),
       });
 
-      const data = await res.json();
-      if (data.success) {
-        setText("");
-        fetchMessages();
-      }
+      setText("");
+      // NO NEED TO FETCH AGAIN — socket will handle real-time update!
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
 
-  useEffect(() => {
-    fetchMessages();
-  }, [userId, receiverId]);
+  // ------------------ UI ------------------
 
-  console.log(messages);
   return (
-    <main className=" h-screen mx-auto  p-4 border  shadow-lg bg-green-200 ">
+    <main className="flex flex-col min-h-screen mx-auto p-4 border w-[600px] shadow-lg bg-green-200 fixed">
+      <h1 className="text-center text-2xl font-bold">Messages</h1>
+
       <h2 className="text-lg font-semibold text-center mb-4 text-gray-800">
         <div className="flex justify-between items-center">
           <span className="text-green-600 bg-white rounded-tr-2xl rounded-tl-2xl rounded-br-2xl p-2">
-            {receiver[0]?.author?.fullName}
-            {/* <pre>{JSON.stringify(sender, 2, 2)}</pre> */}
-          </span>{" "}
+            {receiver?.author?.fullName || "Receiver"}
+          </span>
+
           <span className="text-blue-600 bg-white rounded-tr-2xl rounded-tl-2xl rounded-bl-2xl p-2">
-            {sender[0]?.author?.fullName} (You)
+            {sender?.author?.fullName || "You"} (You)
           </span>
         </div>
       </h2>
 
-      {/* ✅ Messages Area */}
+      {/* Messages Area */}
       <div className="h-96 overflow-y-auto border p-3 rounded bg-white mb-3 space-y-2">
         {messages.length > 0 ? (
           messages.map((msg, index) => {
-            const isSender = msg.sender._id === userId;
+            const isSender = msg.sender?._id === userId;
+
             return (
               <div
                 key={index}
-                className={`flex ${
-                  isSender
-                    ? "justify-end items-end"
-                    : "justify-start items-start"
-                }`}
+                className={`flex ${isSender ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={` flex gap-2 px-4 py-2 rounded-2xl text-sm max-w-[60%] shadow ${
+                  className={`px-4 py-2 rounded-2xl text-sm max-w-[60%] shadow ${
                     isSender
                       ? "bg-blue-500 text-white rounded-br-none"
-                      : "bg-green-500  rounded-bl-none "
+                      : "bg-green-500 text-white rounded-bl-none"
                   }`}
                 >
-                  <div className="flex flex-col">
-                    <span className="rounded-tr-2xl text-white rounded-tl-2xl rounded-br-2xl ">
-                      {msg.text}
-                    </span>
-                    <p className="hover:text-gray-600 text-[8px]">
-                      {new Date(msg.createdAt).toUTCString()}
-                    </p>
-                  </div>
+                  <div>{msg.text}</div>
+                  <p className="text-[8px] mt-1 opacity-70">
+                    {new Date(msg.createdAt).toLocaleString()}
+                  </p>
                 </div>
               </div>
             );
@@ -134,7 +142,8 @@ export default function ChatBoard() {
           </p>
         )}
       </div>
-      {/* ✅ Input Area */}
+
+      {/* Input */}
       <form onSubmit={sendMessage} className="flex gap-2">
         <input
           type="text"

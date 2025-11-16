@@ -204,7 +204,7 @@ export function SocialMediaSidebarComponent() {
           <Link href="/">
             <Button
               variant="ghost"
-              className="w-full justify-start text-red-500 hover:text-red-600 hover:text-white hover:bg-red-600 font-bold"
+              className="w-full justify-start text-red-500  hover:text-white hover:bg-red-600 font-bold"
             >
               <IoLogOut />
               <span className="logout hidden md:block ml-2">Logout</span>
