@@ -12,6 +12,7 @@ const postRoute = require("./routes/postRoute");
 const commentRoute = require("./routes/commentRoute");
 const notificationRoute = require("./routes/notificationRoute");
 const messageRoute = require("./routes/messageRoute");
+const { setMessageSocket } = require("./controllers/messageController");
 
 // Import controller to inject socket instance
 const { setSocketInstance } = require("./controllers/notificationController");
@@ -37,6 +38,23 @@ const io = new Server(server, {
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   },
+});
+
+// Inject chat socket instance
+setMessageSocket(io);
+
+io.on("connection", (socket) => {
+  console.log("⚡ User connected:", socket.id);
+
+  // User joins their private room (userId)
+  socket.on("join", (userId) => {
+    socket.join(userId);
+    console.log(`👤 User ${userId} joined personal room`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("❌ User disconnected:", socket.id);
+  });
 });
 
 // Pass socket.io instance to controllers

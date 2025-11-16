@@ -1,13 +1,22 @@
+let ioInstance;
+
+// Allow server.js to inject socket instance
+const setMessageSocket = (io) => {
+  ioInstance = io;
+};
+
 const Message = require("../models/messageModel");
 
-// ✅ Send or Add a Message between two users
+// ---------------- SEND MESSAGE ----------------
 const sendMessage = async (req, res) => {
   try {
-    const { sender, receiver, text } = req.body; // ✅ get from body
+    const { sender, receiver, text } = req.body;
+
     if (!sender || !receiver || !text) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
+    // Find or create conversation
     let conversation = await Message.findOne({
       participants: { $all: [sender, receiver] },
     });
@@ -19,20 +28,32 @@ const sendMessage = async (req, res) => {
       });
     }
 
-    conversation.messages.push({ sender, text });
+    const newMsg = {
+      sender,
+      text,
+      createdAt: new Date(),
+    };
+
+    conversation.messages.push(newMsg);
     await conversation.save();
 
-    res.status(201).json({
+    // -------- 🔥 EMIT SOCKET EVENT ----------------
+    if (ioInstance) {
+      ioInstance.to(sender).emit("newMessage", newMsg);
+      ioInstance.to(receiver).emit("newMessage", newMsg);
+    }
+
+    return res.status(201).json({
       success: true,
-      message: "Message sent successfully.",
-      data: conversation,
+      message: "Message sent successfully",
+      data: newMsg,
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// ✅ Get all messages between two users
+// ---------------- GET MESSAGES ----------------
 const getMessages = async (req, res) => {
   try {
     const { sender, receiver } = req.params;
@@ -45,16 +66,13 @@ const getMessages = async (req, res) => {
       return res.status(404).json({ message: "No conversation found." });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       messages: conversation.messages,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-module.exports = { sendMessage, getMessages };
+module.exports = { sendMessage, getMessages, setMessageSocket };
