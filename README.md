@@ -80,9 +80,9 @@
   - [x] Live updates for posts
   - [x] Live likes/comments count
 
-- [ ] **Direct Messaging (DMs)**
-  - [ ] Chat between users
-  - [ ] Real-time using Socket.io
+- [x] **Direct Messaging (DMs)**
+  - [x] Chat between users
+  - [x] Real-time using Socket.io
 
 ---
 
