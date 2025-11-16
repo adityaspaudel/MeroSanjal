@@ -82,7 +82,9 @@ export default function ChatBoard() {
 
   console.log(messages);
   return (
-    <main className=" h-screen mx-auto  p-4 border  shadow-lg bg-green-200 ">
+    <main className=" flex flex-col min-h-screen mx-auto  p-4 border  w-[600px] shadow-lg bg-green-200  fixed">
+      {" "}
+      <h1 className=" text-center text-2xl font-bold">Messages</h1>
       <h2 className="text-lg font-semibold text-center mb-4 text-gray-800">
         <div className="flex justify-between items-center">
           <span className="text-green-600 bg-white rounded-tr-2xl rounded-tl-2xl rounded-br-2xl p-2">
@@ -94,7 +96,6 @@ export default function ChatBoard() {
           </span>
         </div>
       </h2>
-
       {/* ✅ Messages Area */}
       <div className="h-96 overflow-y-auto border p-3 rounded bg-white mb-3 space-y-2">
         {messages.length > 0 ? (
