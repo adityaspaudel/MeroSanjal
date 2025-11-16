@@ -80,22 +80,16 @@ export default function ChatBoard() {
     fetchMessages();
   }, [userId, receiverId]);
 
-  setTimeout(() => {
-    fetchMessages();
-  }, [10000]);
-
   console.log(messages);
   return (
-    <main className=" mx-auto  p-4 border  shadow-lg bg-green-200 h-full">
+    <main className=" h-screen mx-auto  p-4 border  shadow-lg bg-green-200 ">
       <h2 className="text-lg font-semibold text-center mb-4 text-gray-800">
-        Chat between{" "}
         <div className="flex justify-between items-center">
-          <span className="text-blue-600">
+          <span className="text-green-600 bg-white rounded-tr-2xl rounded-tl-2xl rounded-br-2xl p-2">
             {receiver[0]?.author?.fullName}
             {/* <pre>{JSON.stringify(sender, 2, 2)}</pre> */}
           </span>{" "}
-          &{" "}
-          <span className="text-green-600">
+          <span className="text-blue-600 bg-white rounded-tr-2xl rounded-tl-2xl rounded-bl-2xl p-2">
             {sender[0]?.author?.fullName} (You)
           </span>
         </div>
@@ -116,13 +110,20 @@ export default function ChatBoard() {
                 }`}
               >
                 <div
-                  className={`px-4 py-2 rounded-2xl text-sm max-w-[70%] shadow ${
+                  className={` flex gap-2 px-4 py-2 rounded-2xl text-sm max-w-[60%] shadow ${
                     isSender
                       ? "bg-blue-500 text-white rounded-br-none"
-                      : "bg-gray-200 text-gray-800 rounded-bl-none"
+                      : "bg-green-500  rounded-bl-none "
                   }`}
                 >
-                  {msg.text}
+                  <div className="flex flex-col">
+                    <span className="rounded-tr-2xl text-white rounded-tl-2xl rounded-br-2xl ">
+                      {msg.text}
+                    </span>
+                    <p className="hover:text-gray-600 text-[8px]">
+                      {new Date(msg.createdAt).toUTCString()}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
