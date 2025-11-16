@@ -2,8 +2,8 @@ const { Comment } = require("../models/commentModel");
 const Post = require("../models/postModel"); // ✅ Needed
 
 const mongoose = require("mongoose");
-// Add comment controller (only if follower)
 
+// Add comment controller (only if follower)
 const {createNotification} = require("./notificationController");
 
 const addComment = async (req, res) => {

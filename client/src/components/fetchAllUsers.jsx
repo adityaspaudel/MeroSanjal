@@ -83,7 +83,7 @@ export default function AllUsers() {
           {users.map((user) => (
             <div
               key={user._id}
-              className="flex items-center bg-gray-100 hover:bg-green-300 justify-between gap-3 p-4 bg-white shadow rounded-lg min-w-[200px] flex-1"
+              className="flex items-center bg-gray-100 hover:bg-green-300 justify-between gap-3 p-4  shadow rounded-lg min-w-[200px] flex-1"
             >
               <div className="flex flex-col">
                 <p className="font-semibold text-gray-800">{user.fullName}</p>

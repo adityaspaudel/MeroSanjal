@@ -86,7 +86,7 @@ export default function ChatBoard() {
       });
 
       setText("");
-      // NO NEED TO FETCH AGAIN — socket will handle real-time update!
+      fetchMessages();
     } catch (error) {
       console.error("Error sending message:", error);
     }

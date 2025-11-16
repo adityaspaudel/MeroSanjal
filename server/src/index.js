@@ -12,9 +12,9 @@ const postRoute = require("./routes/postRoute");
 const commentRoute = require("./routes/commentRoute");
 const notificationRoute = require("./routes/notificationRoute");
 const messageRoute = require("./routes/messageRoute");
-const { setMessageSocket } = require("./controllers/messageController");
 
-// Import controller to inject socket instance
+// Controllers
+const { setMessageSocket } = require("./controllers/messageController");
 const { setSocketInstance } = require("./controllers/notificationController");
 
 dotenv.config();
@@ -23,54 +23,36 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-// ✅ middlewares
+// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ------------------ DATABASE ------------------
+// Database
 dbConnect();
 
 // ------------------ SOCKET.IO SETUP ------------------
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // ✅ My Next.js frontend
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   },
 });
 
-// Inject chat socket instance
+// Inject socket instance to controllers
 setMessageSocket(io);
-
-io.on("connection", (socket) => {
-  console.log("⚡ User connected:", socket.id);
-
-  // User joins their private room (userId)
-  socket.on("join", (userId) => {
-    socket.join(userId);
-    console.log(`👤 User ${userId} joined personal room`);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("❌ User disconnected:", socket.id);
-  });
-});
-
-// Pass socket.io instance to controllers
 setSocketInstance(io);
 
-// Handle socket connection
+// 🔥 socket.on("connection")
 io.on("connection", (socket) => {
   console.log("⚡ User connected:", socket.id);
 
-  //  Join personal room using userId
   socket.on("join", (userId) => {
     socket.join(userId);
     console.log(`👤 User ${userId} joined room`);
   });
 
-  // Handle disconnection
   socket.on("disconnect", () => {
     console.log("❌ User disconnected:", socket.id);
   });
