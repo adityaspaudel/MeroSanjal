@@ -1,7 +1,7 @@
 const Notification = require("../models/notificationModel");
 const mongoose = require("mongoose");
 
-// We’ll inject io (Socket.IO instance) into this module from your main server file.
+
 let io;
 const setSocketInstance = (socketInstance) => {
   io = socketInstance;
