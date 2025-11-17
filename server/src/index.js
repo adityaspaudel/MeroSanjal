@@ -5,6 +5,10 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const dbConnect = require("./db/connection");
 const path = require("path");
+const morgan = require("morgan");
+const helmet = require("helmet");
+const compression = require("compression");
+const cookieParser = require("cookie-parser");
 
 // Routes
 const userRoute = require("./routes/userRoute");
@@ -27,6 +31,10 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(morgan("dev")); // Logging middleware
+app.use(helmet()); // Security middleware
+app.use(compression()); // GZIP compression
+app.use(cookieParser()); // Parse cookies
 
 // Database
 dbConnect();
