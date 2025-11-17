@@ -4,6 +4,13 @@ import { React, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Image from "next/image";
 
 export default function UserProfile() {
   const { userId } = useParams();
@@ -301,10 +308,10 @@ export default function UserProfile() {
   if (!user) return <p className="text-red-500">User not found</p>;
 
   return (
-    <div className="p-8 min-h-full bg-green-100">
+    <div className="p-8 min-h-full w-md bg-green-200">
       {/* User Info */}
       <div className="mb-6 flex items-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-blue-300 flex items-center justify-center text-gray-600 font-bold text-2xl ">
+        <div className="w-16 h-16 rounded-full bg-blue-300 flex items-center justify-center  font-bold text-2xl text-black">
           <img
             className="rounded-[50%] object-cover"
             src="/blank-pp.jpg"
@@ -532,58 +539,99 @@ export default function UserProfile() {
       )}
 
       {/* display following and follower  */}
-      <div className="flex font-bold text-sm bg-white">
-        <div
-          className="flex flex-col bg-white p-2  cursor-pointer hover:bg-gray-100"
-          onClick={displayFollowing}
-        >
-          following <span>{following.length}</span>
-        </div>
+      <div className="flex font-bold text-sm bg-gray-100">
+        <Dialog>
+          <form>
+            <DialogTrigger asChild>
+              <div
+                className="flex flex-col bg-white p-2  cursor-pointer hover:bg-gray-100"
+                onClick={displayFollowing}
+              >
+                following <span>{following.length}</span>
+              </div>
+            </DialogTrigger>
 
-        <div
-          className="flex flex-col bg-white p-2  cursor-pointer hover:bg-gray-100"
-          onClick={displayFollowers}
-        >
-          followers <span>{followers.length}</span>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogTitle>
+                {" "}
+                <p className="font-bold">Following</p>
+              </DialogTitle>
+              <div>
+                {showFollowing && (
+                  <div className="h-96 overflow-auto">
+                    {following.map((val) => (
+                      <div key={val._id}>
+                        {" "}
+                        <div className="flex gap-2 hover:bg-green-200 p-2 text-sm rounded-xl bg-gray-100 ">
+                          {" "}
+                          <Image
+                            className="h-10 w-10 rounded-full"
+                            src={`/blank-pp.jpg`}
+                            alt="pp"
+                            width={10}
+                            height={10}
+                          />
+                          <div className="flex flex-col">
+                            <p>{val.fullName}</p>
+                            <p>{val.email}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </DialogContent>
+          </form>
+        </Dialog>
+
+        <div className="flex font-bold h-96 text-sm bg-gray-100">
+          <Dialog>
+            <form>
+              <DialogTrigger asChild>
+                <div
+                  className="flex flex-col bg-white p-2  cursor-pointer hover:bg-gray-100"
+                  onClick={displayFollowers}
+                >
+                  followers <span>{followers.length}</span>
+                </div>
+              </DialogTrigger>
+
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogTitle>
+                  <p className="font-bold">Followers</p>
+                </DialogTitle>
+                <div>
+                  {showFollowers && (
+                    <div className="h-[400px] overflow-auto">
+                      {followers.map((val) => (
+                        <div key={val._id}>
+                          <div className="flex gap-2 hover:bg-green-200 p-2 text-sm rounded-xl bg-gray-100 ">
+                            {" "}
+                            <Image
+                              className="h-10 w-10 rounded-full"
+                              src={`/blank-pp.jpg`}
+                              alt="pp"
+                              width={10}
+                              height={10}
+                            />
+                            <div className="flex flex-col">
+                              <p>{val.fullName}</p>
+                              <p>{val.email}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </DialogContent>
+            </form>
+          </Dialog>
         </div>
       </div>
       {/* show following and followers list  */}
-      <div>
-        <div>
-          {showFollowing && (
-            <div className="h-48 overflow-auto">
-              <h1 className="font-bold">Following</h1>
-
-              {following.map((val) => (
-                <div key={val._id}>
-                  {" "}
-                  <div className="flex flex-col gap-2 hover:bg-green-200 p-2 text-sm rounded-xl bg-gray-100">
-                    <p>{val.fullName}</p>
-                    <p>{val.email}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        <div>
-          {showFollowers && (
-            <div className="h-48 overflow-auto">
-              <h1 className="font-bold">Followers</h1>
-
-              {followers.map((val) => (
-                <div key={val._id}>
-                  <div className="flex flex-col gap-2 hover:bg-green-200 p-2 text-sm rounded-xl bg-gray-100">
-                    {" "}
-                    <p>{val.fullName}</p>
-                    <p>{val.email}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      <div></div>
       {/* User Posts */}
       {posts.length > 0 ? (
         posts.map((post) => {
@@ -617,8 +665,8 @@ export default function UserProfile() {
                   </div>
                 </div>
 
-                <p className="flex items-start content-start w-full text-gray-700 leading-relaxed mb-4">
-                  {post.content}
+                <p className="flex items-start text-gray-700 leading-relaxed mb-4 break-all w-md">
+                  <span className="break-all text-center text-2xl text-green-700">{post.content}</span>
                 </p>
               </Link>
               <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
