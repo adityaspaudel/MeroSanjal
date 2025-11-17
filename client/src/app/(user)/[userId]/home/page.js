@@ -197,7 +197,7 @@ const HomeComponent = () => {
   };
 
   return (
-    <div className="p-6 w-full mx-auto min-h-full bg-green-200">
+    <div className="p-6 max-w-xl mx-auto min-h-full bg-green-200">
       {/* ✅ Create Post */}
       <div className="mb-6 w-full">
         <textarea
@@ -290,9 +290,12 @@ const HomeComponent = () => {
                 </div>
               ) : (
                 <>
-                  <p className="mt-2 text-green-900  text-center text-4xl ">
-                    {post.content}
-                  </p>
+                  <div
+                    className="mt-2 text-green-900  text-center text-4xl break-words
+"
+                  >
+                    <span>{post.content}</span>
+                  </div>
                   {/* ✅ Show uploaded images */}
                   {post.imagesUrl?.length > 0 && (
                     <div className="flex gap-2 flex-wrap justify-center items-center mt-2">
