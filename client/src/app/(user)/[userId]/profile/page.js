@@ -308,7 +308,7 @@ export default function UserProfile() {
   if (!user) return <p className="text-red-500">User not found</p>;
 
   return (
-    <div className="p-8 min-h-full w-md bg-green-200">
+    <div className="p-8 flex flex-col gap-2 min-h-full w-md bg-green-200">
       {/* User Info */}
       <div className="mb-6 flex items-center gap-4">
         <div className="w-16 h-16 rounded-full bg-blue-300 flex items-center justify-center  font-bold text-2xl text-black">
@@ -539,7 +539,7 @@ export default function UserProfile() {
       )}
 
       {/* display following and follower  */}
-      <div className="flex font-bold text-sm bg-gray-100">
+      <div className="flex font-bold text-sm bg-gray-100 rounded-md overflow-hidden">
         <Dialog>
           <form>
             <DialogTrigger asChild>
@@ -585,7 +585,7 @@ export default function UserProfile() {
           </form>
         </Dialog>
 
-        <div className="flex font-bold h-96 text-sm bg-gray-100">
+        <div className="flex font-bold max-h-96 text-sm bg-gray-100 ">
           <Dialog>
             <form>
               <DialogTrigger asChild>
@@ -631,7 +631,6 @@ export default function UserProfile() {
         </div>
       </div>
       {/* show following and followers list  */}
-      <div></div>
       {/* User Posts */}
       {posts.length > 0 ? (
         posts.map((post) => {
@@ -640,7 +639,7 @@ export default function UserProfile() {
           return (
             <div
               key={post._id}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6 mb-6 border border-gray-200"
+              className="bg-white rounded-md shadow-md hover:shadow-xl transition-shadow duration-300 p-6 mb-6 border border-gray-200"
             >
               <Link
                 href={`/${userId}/posts/${post._id}`}
@@ -666,7 +665,9 @@ export default function UserProfile() {
                 </div>
 
                 <p className="flex items-start text-gray-700 leading-relaxed mb-4 break-all w-md">
-                  <span className="break-all text-center text-2xl text-green-700">{post.content}</span>
+                  <span className="break-all text-center text-2xl text-green-700">
+                    {post.content}
+                  </span>
                 </p>
               </Link>
               <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
