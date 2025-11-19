@@ -10,6 +10,9 @@ const helmet = require("helmet");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger-output.json"); // auto-generated file
+
 // Routes
 const userRoute = require("./routes/userRoute");
 const postRoute = require("./routes/postRoute");
@@ -35,6 +38,9 @@ app.use(morgan("dev")); // Logging middleware
 app.use(helmet()); // Security middleware
 app.use(compression()); // GZIP compression
 app.use(cookieParser()); // Parse cookies
+
+// swagger docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Database
 dbConnect();
