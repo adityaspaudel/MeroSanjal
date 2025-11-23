@@ -99,10 +99,10 @@
 
    ```
    cd client
-   npm install
+   pnpm install
 
    cd ../server
-   npm install
+   pnpm install
    ```
 
 3. Set up environment variables
@@ -112,14 +112,14 @@
 
    ```
    cd MeroSanjal/client
-   npm run dev
+   pnpm run dev
    ```
 
    For the backend server:
 
    ```
    cd ../server
-   npm start
+   pnpm run dev
    ```
 
 5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the frontend.
