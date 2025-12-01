@@ -112,14 +112,14 @@
 
    ```
    cd MeroSanjal/client
-   pnpm run dev
+   pnpm  dev
    ```
 
    For the backend server:
 
    ```
    cd ../server
-   pnpm run dev
+   pnpm  dev
    ```
 
 5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the frontend.
@@ -134,9 +134,6 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
  -->
-
-
-
 
 <!--
 
