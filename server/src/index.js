@@ -58,6 +58,14 @@ const io = new Server(server, {
 setMessageSocket(io);
 setSocketInstance(io);
 
+// Catch unhandled errors
+process.on("uncaughtException", (error) => {
+  console.log("Uncaught Exception:", error);
+});
+
+process.on("unhandledRejection", (error) => {
+  console.log("Unhandled Promise Rejection:", error.message);
+});
 // 🔥 socket.on("connection")
 io.on("connection", (socket) => {
   console.log("⚡ User connected:", socket.id);
@@ -79,8 +87,17 @@ app.use(commentRoute);
 app.use(notificationRoute);
 app.use(messageRoute);
 
+// routing error handling 
+app.use((req, res) => {
+  console.error("Routing error:", req.originalUrl);
+  res.status(500).json({ message: "Routing error" });
+});
 // ------------------ SERVER LISTEN ------------------
 const PORT = process.env.PORT || 8000;
-server.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+try {
+  server.listen(PORT, () => {
+    console.log(`Application is listening on port ${PORT}`);
+  });
+} catch (error) {
+  console.log("Server startup error:", error);
+}
