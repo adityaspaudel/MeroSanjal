@@ -138,7 +138,7 @@
 ![User Login](./client/public/screenshots/userLogin.png)
 ## User Home
 
-![User Home](./client/public/screenshots/userHome.png)
+![User Home](./client/public/screenshots/home.png)
 
 ## User Search
 
@@ -154,7 +154,7 @@
 
 ## User Notifications
 
-![User Notifications](./client/public/screenshots/notifications)
+![User Notifications](./client/public/screenshots/notifications.png)
 
 ## User Chat between User
 
