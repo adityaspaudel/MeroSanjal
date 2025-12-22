@@ -128,15 +128,36 @@
 
 # Project Screenshots
 
+
+## User Registration
+
 ![User Register](./client/public/screenshots/userRegister.png)
+
+## User Login
+
 ![User Login](./client/public/screenshots/userLogin.png)
-![User Home](./client/public/screenshots/userRegister.png)
+## User Home
+
+![User Home](./client/public/screenshots/userHome.png)
+
+## User Search
+
 ![User Search](./client/public/screenshots/userSearch.png)
 
+## User Profile
+
 ![User Profile](./client/public/screenshots/profile.png)
+
+## User Edit / Update
+
 ![User ProfileEdit](./client/public/screenshots/profileEdit.png)
 
+## User Notifications
+
 ![User Notifications](./client/public/screenshots/notifications)
+
+## User Chat between User
+
 ![User Chatboard](./client/public/screenshots/chat.png)
 
 <!-- ## Contributing
