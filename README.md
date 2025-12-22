@@ -126,6 +126,19 @@
 
 6. Backend server will run on [http://localhost:8000](http://localhost:8000) by default.
 
+# Project Screenshots
+
+![User Register](./client/public/screenshots/userRegister.png)
+![User Login](./client/public/screenshots/userLogin.png)
+![User Home](./client/public/screenshots/userRegister.png)
+![User Search](./client/public/screenshots/userSearch.png)
+
+![User Profile](./client/public/screenshots/profile.png)
+![User ProfileEdit](./client/public/screenshots/profileEdit.png)
+
+![User Notifications](./client/public/screenshots/notifications)
+![User Chatboard](./client/public/screenshots/chat.png)
+
 <!-- ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
