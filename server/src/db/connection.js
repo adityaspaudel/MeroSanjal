@@ -9,9 +9,7 @@ MONGODB_COMPASS_URI = "mongodb://localhost:27017/merosanjal";
 // ------------------ Database ------------------
 const dbConnect = async () => {
 	try {
-		const isConnected = await mongoose.connect(
-			process.env.MONGODB_ATLAS_URI || MONGODB_COMPASS_URI
-		);
+		const isConnected = await mongoose.connect(MONGODB_COMPASS_URI);
 		if (!isConnected) {
 			console.error(`could not connect to mongodb`);
 		} else {
