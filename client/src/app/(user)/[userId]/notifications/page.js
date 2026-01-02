@@ -1,14 +1,14 @@
 "use client";
 
 import { React, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function NotificationsPage() {
 	const { userId } = useParams();
 	const [notifications, setNotifications] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
-
+	const router = useRouter();
 	// ✅ Fetch all notifications
 	const fetchNotifications = async () => {
 		if (!userId) return;
@@ -87,8 +87,20 @@ export default function NotificationsPage() {
 	// ✅ Main render
 	return (
 		<div className="bg-white p-6 ">
-			<div className="max-w-2xl mx-auto  p-4 bg-white h-full rounded-sm">
+			<div className="max-w-xl mx-auto  p-4 bg-white h-full rounded-sm">
+				<div
+					className="flex content-start items-start text-2xl font-bold w-full"
+					title="go back"
+				>
+					<span
+						onClick={() => router.back()}
+						className="hover:bg-slate-100 h-8 w-8 cursor-pointer text-center rounded-2xl"
+					>
+						❮
+					</span>
+				</div>
 				<h1 className="text-2xl font-semibold mb-6">Notifications</h1>
+
 				<div className="space-y-4">
 					{notifications.map((notification) => (
 						<div

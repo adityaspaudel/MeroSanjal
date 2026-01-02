@@ -89,11 +89,11 @@ export default function AllUsers() {
 					{users.map((user) => (
 						<div
 							key={user._id}
-							className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-sm shadow hover:shadow-lg transition-shadow duration-200"
+							className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white hover:bg-gray-900 hover:text-white rounded-sm shadow hover:shadow-lg transition-shadow duration-200"
 						>
 							<div className="flex flex-col text-center sm:text-left sm:flex-1">
-								<p className="font-semibold text-gray-800">{user.fullName}</p>
-								<p className="text-sm text-gray-500">{user.email}</p>
+								<p className="font-semibold ">{user.fullName}</p>
+								<p className="text-sm ">{user.email}</p>
 							</div>
 							{user._id !== currentUserId && (
 								<button

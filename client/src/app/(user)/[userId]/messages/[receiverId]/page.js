@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import io from "socket.io-client";
 
 // Connect to backend socket server
@@ -14,7 +14,7 @@ export default function ChatBoard() {
 	const [text, setText] = useState("");
 	const [sender, setSender] = useState(null);
 	const [receiver, setReceiver] = useState(null);
-
+	const router = useRouter();
 	// ------------------ FETCH USER DATA ------------------
 
 	const fetchUser = async (id, setUser) => {
@@ -96,9 +96,19 @@ export default function ChatBoard() {
 	// ------------------ UI ------------------
 
 	return (
-		<main className="flex flex-col min-h-screen mx-auto p-4 border w-[600px] shadow-lg bg-green-200 fixed">
+		<main className="flex flex-col min-h-screen mx-auto p-4 border w-[600px] shadow-lg max-w-xl  bg-white h-full rounded-sm ">
 			<h1 className="text-center text-2xl font-bold">Messages</h1>
-
+			<div
+				className="flex content-start items-start text-2xl font-bold w-full"
+				title="go back"
+			>
+				<span
+					onClick={() => router.back()}
+					className="hover:bg-slate-100 h-8 w-8 cursor-pointer text-center rounded-2xl"
+				>
+					❮
+				</span>
+			</div>
 			<h2 className="text-lg font-semibold text-center mb-4 text-gray-800">
 				<div className="flex justify-between items-center">
 					<span className="text-green-600 bg-white rounded-tr-2xl rounded-tl-2xl rounded-br-2xl p-2">

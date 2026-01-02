@@ -186,14 +186,14 @@ const HomeComponent = () => {
 	};
 
 	return (
-		<div className="p-6 max-w-3xl mx-auto min-h-full ">
+		<div className="p-6 max-w-xl mx-auto min-h-full ">
 			{/* Create Post */}
 			<div className="mb-6 p-4 rounded-sm bg-white shadow-lg border ">
 				<textarea
 					value={content}
 					onChange={(e) => setContent(e.target.value)}
 					placeholder="What's on your mind?"
-					className="w-full border rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+					className="w-full border rounded-sm p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-green-400"
 				/>
 				<input
 					type="file"
@@ -209,13 +209,13 @@ const HomeComponent = () => {
 							key={idx}
 							src={URL.createObjectURL(img)}
 							alt={`preview-${idx}`}
-							className="w-24 h-24 object-cover rounded-lg border"
+							className="w-24 h-24 object-cover rounded-sm border"
 						/>
 					))}
 				</div>
 				<button
 					onClick={createPost}
-					className="bg-green-500 hover:bg-green-600 text-white font-semibold px-5 py-2 rounded-lg transition-colors"
+					className="bg-green-500 hover:bg-green-600 text-white font-semibold px-5 py-2 rounded-sm transition-colors"
 				>
 					Post
 				</button>
@@ -290,7 +290,7 @@ const HomeComponent = () => {
 															<img
 																src={`${img}`}
 																alt={`post-${idx}`}
-																className="w-32 h-32 object-cover rounded-lg  cursor-pointer hover:scale-105 transition-transform"
+																className="w-32 h-32 object-cover rounded-sm  cursor-pointer hover:scale-105 transition-transform"
 																title="Click to view"
 															/>
 														</DialogTrigger>
