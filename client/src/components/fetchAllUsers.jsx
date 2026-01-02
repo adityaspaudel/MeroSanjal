@@ -80,7 +80,7 @@ export default function AllUsers() {
 		);
 
 	return (
-		<div className="p-6 min-h-screen bg-gradient-to-b from-green-400  to-green-600">
+		<div className="p-4 min-h-screen bg-white shadow hover:shadow-black hover:shadow-md  transition 1s">
 			<h2 className="text-2xl font-bold mb-6 text-gray-800">All Users</h2>
 			{users.length === 0 ? (
 				<p className="text-gray-600">No users found.</p>
@@ -89,11 +89,11 @@ export default function AllUsers() {
 					{users.map((user) => (
 						<div
 							key={user._id}
-							className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-xl shadow hover:shadow-lg transition-shadow duration-200"
+							className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white hover:bg-gray-900 hover:text-white rounded-sm shadow hover:shadow-lg transition-shadow duration-200"
 						>
 							<div className="flex flex-col text-center sm:text-left sm:flex-1">
-								<p className="font-semibold text-gray-800">{user.fullName}</p>
-								<p className="text-sm text-gray-500">{user.email}</p>
+								<p className="font-semibold ">{user.fullName}</p>
+								<p className="text-sm ">{user.email}</p>
 							</div>
 							{user._id !== currentUserId && (
 								<button

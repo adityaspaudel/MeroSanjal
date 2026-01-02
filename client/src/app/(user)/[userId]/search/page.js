@@ -10,6 +10,7 @@ const UserSearch = () => {
       {/*  */}
 
       <SearchComponent />
+      
     </div>
   );
 };

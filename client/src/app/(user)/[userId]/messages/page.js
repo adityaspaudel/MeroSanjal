@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 
 const UserMessageDashboard = () => {
 	const { userId } = useParams();
 	const [userDetails, setUserDetails] = useState(null);
-
+	const router = useRouter();
 	// alert(userId);
 	const getUserDetails = useCallback(async () => {
 		try {
@@ -29,7 +29,18 @@ const UserMessageDashboard = () => {
 		getUserDetails();
 	}, [getUserDetails]);
 	return (
-		<main className="min-h-full bg-gradient-to-b from-green-400  to-green-600 overflow-auto text-black p-6">
+		<main className="min-h-full bg-white overflow-auto text-black p-6 max-w-xl mx-auto   h-full rounded-sm">
+			<div
+				className="flex content-start items-start text-2xl font-bold w-full"
+				title="go back"
+			>
+				<span
+					onClick={() => router.back()}
+					className="hover:bg-slate-100 h-8 w-8 cursor-pointer text-center rounded-2xl"
+				>
+					❮
+				</span>
+			</div>
 			<div className="text-2xl font-bold">User Message Dashboard</div>
 			{userDetails && (
 				<div className=" flex flex-col gap-2 ">
