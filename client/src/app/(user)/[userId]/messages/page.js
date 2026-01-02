@@ -29,7 +29,7 @@ const UserMessageDashboard = () => {
 		getUserDetails();
 	}, [getUserDetails]);
 	return (
-		<main className="min-h-full bg-gradient-to-b from-green-400  to-green-600 overflow-auto text-black p-6">
+		<main className="min-h-full bg-white overflow-auto text-black p-6">
 			<div className="text-2xl font-bold">User Message Dashboard</div>
 			{userDetails && (
 				<div className=" flex flex-col gap-2 ">

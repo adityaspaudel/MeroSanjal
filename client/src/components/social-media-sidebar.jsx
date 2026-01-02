@@ -5,7 +5,7 @@ import { FaConnectdevelop, FaUserAlt, FaBell } from "react-icons/fa";
 import {
 	IoHomeSharp,
 	IoLogOut,
-	IoSettingsSharp,
+	// IoSettingsSharp,
 	IoMail,
 } from "react-icons/io5";
 import { RiSearchFill } from "react-icons/ri";
@@ -71,8 +71,8 @@ export function SocialMediaSidebarComponent() {
 	}, [userId]);
 
 	return (
-		<div className="h-screen sticky top-0 bg-gradient-to-b from-green-400  to-green-600 p-6">
-			<div className="flex flex-col justify-between h-full w-[80px] sm:w-[100px] md:w-[100px] xl:w-[300px] border-r  bg-white rounded-xl shadow-lg px-2 py-4">
+		<div className="h-screen sticky top-0 shadow hover:shadow-black hover:shadow-md transition 1s">
+			<div className="flex flex-col justify-between h-full w-[80px] sm:w-[100px] md:w-[100px] xl:w-[300px]   bg-white shadow-lg px-2 py-4">
 				{/* -------- TOP SECTION -------- */}
 				<div className="space-y-6">
 					{/* Logo */}
@@ -92,7 +92,7 @@ export function SocialMediaSidebarComponent() {
 						<Link href={`/${userId}/home`}>
 							<Button
 								variant="ghost"
-								className="w-full justify-start  hover:bg-gray-900 rounded-lg hover:text-white"
+								className="w-full justify-start  hover:bg-gray-900 rounded-sm hover:text-white"
 							>
 								<IoHomeSharp className="text-xl" />
 								<span className="hidden md:block ml-2 font-medium">Home</span>
@@ -103,7 +103,7 @@ export function SocialMediaSidebarComponent() {
 						<Link href={`/${userId}/search`}>
 							<Button
 								variant="ghost"
-								className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-lg"
+								className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-sm"
 							>
 								<RiSearchFill className="text-xl" />
 								<input
@@ -118,7 +118,7 @@ export function SocialMediaSidebarComponent() {
 						<Link href={`/${userId}/notifications`}>
 							<Button
 								variant="ghost"
-								className="relative w-full justify-start hover:bg-gray-900 hover:text-white rounded-lg"
+								className="relative w-full justify-start hover:bg-gray-900 hover:text-white rounded-sm"
 							>
 								<FaBell className="text-xl" />
 								{unreadCount > 0 && (
@@ -136,7 +136,7 @@ export function SocialMediaSidebarComponent() {
 						<Link href={`/${userId}/messages`}>
 							<Button
 								variant="ghost"
-								className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-lg"
+								className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-sm"
 							>
 								<IoMail className="text-xl" />
 								<span className="hidden md:block ml-2 font-medium">
@@ -149,7 +149,7 @@ export function SocialMediaSidebarComponent() {
 						<Link href={`/${userId}/profile`}>
 							<Button
 								variant="ghost"
-								className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-lg"
+								className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-sm"
 							>
 								<FaUserAlt className="text-xl" />
 								<span className="hidden md:block ml-2 font-medium">
@@ -166,7 +166,7 @@ export function SocialMediaSidebarComponent() {
 					{user && (
 						<Link
 							href={`/${userId}/profile`}
-							className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-900 hover:text-white transition"
+							className="flex items-center gap-2 p-2 rounded-sm hover:bg-gray-900 hover:text-white transition "
 						>
 							<Avatar>
 								<AvatarImage
@@ -174,29 +174,27 @@ export function SocialMediaSidebarComponent() {
 									alt={user.fullName}
 								/>
 							</Avatar>
-							<div className="hidden md:flex flex-col">
+							<div className="hidden md:flex flex-col hover:text-white">
 								<p className="text-sm font-semibold ">{user.fullName}</p>
-								<p className="text-xs text-gray-400">
-									@{user.email.split("@")[0]}
-								</p>
+								<p className="text-xs  ">@{user.email.split("@")[0]}</p>
 							</div>
 						</Link>
 					)}
 
 					{/* Settings */}
-					<Link href={`/${userId}/userSettings`}>
+					{/* <Link href={`/${userId}/userSettings`}>
 						<Button
 							variant="ghost"
-							className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-lg"
+							className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-sm"
 						>
 							<IoSettingsSharp className="text-xl" />
 							<span className="hidden md:block ml-2 font-medium">Settings</span>
 						</Button>
-					</Link>
+					</Link> */}
 
 					{/* Logout */}
 					<Link href="/">
-						<Button className="w-full justify-start text-red-600 hover:bg-red-600 hover:text-white rounded-lg font-bold">
+						<Button className="w-full justify-start text-red-600 hover:bg-red-900 hover:text-white rounded-sm font-bold">
 							<IoLogOut className="text-xl" />
 							<span className="hidden md:block ml-2">Logout</span>
 						</Button>

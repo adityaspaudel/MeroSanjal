@@ -186,9 +186,9 @@ const HomeComponent = () => {
 	};
 
 	return (
-		<div className="p-6 max-w-3xl mx-auto min-h-full bg-gradient-to-b from-green-400  to-green-600">
+		<div className="p-6 max-w-3xl mx-auto min-h-full ">
 			{/* Create Post */}
-			<div className="mb-6 p-4 rounded-lg bg-white shadow-lg border border-gray-200">
+			<div className="mb-6 p-4 rounded-sm bg-white shadow-lg border ">
 				<textarea
 					value={content}
 					onChange={(e) => setContent(e.target.value)}
@@ -230,7 +230,7 @@ const HomeComponent = () => {
 					return (
 						<div
 							key={post._id}
-							className="flex flex-col gap-3 p-4  rounded-xl shadow-md border border-gray-500 bg-white hover:shadow-xl transition-shadow"
+							className="flex flex-col gap-3 p-4  rounded-sm shadow-md border  bg-white hover:shadow-xl transition-shadow"
 						>
 							{/* Author Info */}
 							<Link
@@ -258,18 +258,18 @@ const HomeComponent = () => {
 									<textarea
 										value={editContent}
 										onChange={(e) => setEditContent(e.target.value)}
-										className="border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+										className="border p-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-400"
 									/>
 									<div className="flex gap-2">
 										<button
 											onClick={() => updatePost(post._id)}
-											className="bg-gray-600 text-white px-3 py-1 rounded-lg"
+											className="bg-gray-600 text-white px-3 py-1 rounded-sm"
 										>
 											Save
 										</button>
 										<button
 											onClick={() => setEditingPost(null)}
-											className="bg-gray-400 text-white px-3 py-1 rounded-lg"
+											className="bg-gray-400 text-white px-3 py-1 rounded-sm"
 										>
 											Cancel
 										</button>
@@ -290,18 +290,18 @@ const HomeComponent = () => {
 															<img
 																src={`${img}`}
 																alt={`post-${idx}`}
-																className="w-32 h-32 object-cover rounded-lg border cursor-pointer hover:scale-105 transition-transform"
+																className="w-32 h-32 object-cover rounded-lg  cursor-pointer hover:scale-105 transition-transform"
 																title="Click to view"
 															/>
 														</DialogTrigger>
-														<DialogContent className="sm:max-w-[800px] sm:max-h-[600px] flex flex-col justify-center items-center bg-gradient-to-b from-green-400 to-green-500 rounded-lg p-4">
+														<DialogContent className="sm:max-w-[800px] sm:max-h-[600px] flex flex-col justify-center items-center bg-white rounded-sm p-4">
 															<DialogHeader>
 																<DialogTitle></DialogTitle>
 															</DialogHeader>
 															<img
 																src={`${img}`}
 																alt={`post-${idx}`}
-																className="h-[600px] object-contain rounded-lg border"
+																className="h-[600px] object-contain rounded-sm border"
 															/>
 														</DialogContent>
 													</form>
@@ -317,7 +317,7 @@ const HomeComponent = () => {
 								<div className="flex gap-2 items-center flex-wrap">
 									<button
 										onClick={() => toggleLike(post._id)}
-										className={`px-4 py-1 rounded-lg text-white font-medium transition-colors ${
+										className={`px-4 py-1 rounded-sm text-white font-medium transition-colors ${
 											liked
 												? "bg-red-600 hover:bg-red-700"
 												: "bg-green-600 hover:bg-green-700"
@@ -338,13 +338,13 @@ const HomeComponent = () => {
 												setEditingPost(post._id);
 												setEditContent(post.content);
 											}}
-											className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-lg"
+											className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-sm"
 										>
 											Edit
 										</button>
 										<button
 											onClick={() => deletePost(post._id)}
-											className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg"
+											className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-sm"
 										>
 											Delete
 										</button>
@@ -370,17 +370,17 @@ const HomeComponent = () => {
 															onChange={(e) =>
 																setEditCommentText(e.target.value)
 															}
-															className="border px-2 py-1 rounded-lg flex-1 focus:outline-none focus:ring-2 focus:ring-green-400"
+															className="border px-2 py-1 rounded-sm flex-1 focus:outline-none focus:ring-2 focus:ring-green-400"
 														/>
 														<button
 															onClick={() => updateComment(post._id, c._id)}
-															className="px-2 py-1 bg-gray-600 text-white rounded-lg"
+															className="px-2 py-1 bg-gray-600 text-white rounded-sm"
 														>
 															Save
 														</button>
 														<button
 															onClick={() => setEditingComment(null)}
-															className="px-2 py-1 bg-gray-400 text-white rounded-lg"
+															className="px-2 py-1 bg-gray-400 text-white rounded-sm"
 														>
 															Cancel
 														</button>
@@ -398,7 +398,7 @@ const HomeComponent = () => {
 																			setEditingComment(c._id);
 																			setEditCommentText(c.text);
 																		}}
-																		className="px-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg"
+																		className="px-2 bg-gray-500 hover:bg-gray-600 text-white rounded-sm"
 																	>
 																		Edit
 																	</button>
@@ -406,7 +406,7 @@ const HomeComponent = () => {
 																		onClick={() =>
 																			deleteComment(post._id, c._id)
 																		}
-																		className="px-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+																		className="px-2 bg-red-500 hover:bg-red-600 text-white rounded-sm"
 																	>
 																		Delete
 																	</button>
@@ -434,11 +434,11 @@ const HomeComponent = () => {
 												[post._id]: e.target.value,
 											}))
 										}
-										className="border p-2 rounded-lg flex-1 focus:outline-none focus:ring-2 focus:ring-green-400 hover:border-black"
+										className="border p-2 rounded-sm flex-1 focus:outline-none focus:ring-2 focus:ring-green-400 hover:border-black"
 									/>
 									<button
 										onClick={() => addComment(post._id)}
-										className="bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition-colors"
+										className="bg-green-500 text-white px-3 py-2 rounded-sm hover:bg-green-600 transition-colors"
 									>
 										Comment
 									</button>
