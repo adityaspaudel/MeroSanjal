@@ -194,54 +194,57 @@ export default function IndividualPost() {
 			) : (
 				<p className="mb-3">{currentPost.content}</p>
 			)}
+			{/* post actions like edit delete  */}
+			<div className="flex justify-between items-center">
+				{/* LIKE */}
 
-			{/* POST ACTIONS */}
-			{currentPost.author._id === userId && !editingPost && (
-				<div className="flex gap-2 mb-4">
+				<div className="flex items-center gap-2 mb-4">
 					<button
-						onClick={() => {
-							setEditingPost(true);
-							setEditContent(currentPost.content);
-						}}
-						className="bg-gray-500 text-white px-3 py-1 rounded text-xs"
+						onClick={() => toggleLike(currentPost._id)}
+						className={`px-3 py-1 rounded text-white ${
+							liked ? "bg-red-500" : "bg-green-500"
+						}`}
 					>
-						Edit
+						{liked ? "Unlike" : "Like"}
 					</button>
-					<button
-						onClick={() => deletePost(currentPost._id)}
-						className="bg-red-500 text-white px-3 py-1 rounded text-xs"
-					>
-						Delete
-					</button>
+					<span className="text-sm">{currentPost.likes.length} likes</span>
 				</div>
-			)}
 
-			{/* LIKE */}
-			<div className="flex items-center gap-2 mb-4">
-				<button
-					onClick={() => toggleLike(currentPost._id)}
-					className={`px-3 py-1 rounded text-white ${
-						liked ? "bg-red-500" : "bg-green-500"
-					}`}
-				>
-					{liked ? "Unlike" : "Like"}
-				</button>
-				<span className="text-sm">{currentPost.likes.length} likes</span>
+				{/* post edit or delete  */}
+				<div>
+					{currentPost.author._id === userId && !editingPost && (
+						<div className="flex gap-2 mb-4">
+							<button
+								onClick={() => {
+									setEditingPost(true);
+									setEditContent(currentPost.content);
+								}}
+								className="bg-gray-500 text-white px-3 py-1 rounded text-xs"
+							>
+								Edit
+							</button>
+							<button
+								onClick={() => deletePost(currentPost._id)}
+								className="bg-red-500 text-white px-3 py-1 rounded text-xs"
+							>
+								Delete
+							</button>
+						</div>
+					)}
+				</div>
 			</div>
-
 			{/* COMMENTS */}
 			<h3 className="font-semibold text-sm mb-2">Comments</h3>
 
 			{currentPost.comments.map((c) => (
-				<div key={c._id} className="bg-gray-50 p-2 mb-2 rounded">
-					<p className="text-xs font-semibold">{c.user.fullName}</p>
-
+				<div key={c._id} className="flex gap-2 bg-gray-50 p-2 mb-2 rounded">
+					<p className="text-sm font-semibold">{c.user.fullName}:</p>
 					{editingComment === c._id ? (
 						<div className="flex gap-2 mt-1">
 							<input
 								value={editCommentText}
 								onChange={(e) => setEditCommentText(e.target.value)}
-								className="border flex-1 px-2 py-1 rounded text-sm"
+								className="border flex-1 px-2  rounded text-sm"
 							/>
 							<button
 								onClick={() => updateComment(currentPost._id, c._id)}
@@ -257,23 +260,29 @@ export default function IndividualPost() {
 							</button>
 						</div>
 					) : (
-						<p className="text-sm">{c.text}</p>
+						<div className="text-sm flex flex-col">
+							<span>{c.text}</span>
+							<span className="text-gray-400 text-xs">
+								{" "}
+								{new Date(c.createdAt).toLocaleString()}
+							</span>
+						</div>
 					)}
 
 					{c.user._id === userId && (
-						<div className="flex gap-2 mt-1 text-xs">
+						<div className="flex gap-2 mt-1 text-white text-xs">
 							<button
 								onClick={() => {
 									setEditingComment(c._id);
 									setEditCommentText(c.text);
 								}}
-								className="text-blue-600"
+								className="bg-blue-500 hover:bg-blue-600 px-2 rounded-sm "
 							>
 								Edit
 							</button>
 							<button
 								onClick={() => deleteComment(currentPost._id, c._id)}
-								className="text-red-600"
+								className="bg-red-500 hover:bg-red-600 px-2 rounded-sm"
 							>
 								Delete
 							</button>
