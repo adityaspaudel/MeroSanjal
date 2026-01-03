@@ -67,10 +67,10 @@ const LoginForm = () => {
 	});
 
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-green-400  to-green-600">
+		<div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-50  to-gray-200">
 			<form
 				onSubmit={formik.handleSubmit}
-				className="w-full max-w-md p-6 bg-white rounded-sm shadow shadow-gray-200 transition 3s hover:shadow-black"
+				className="w-full max-w-md p-6 bg-white rounded-sm shadow shadow-gray-200 transition 3s hover:shadow-black border"
 			>
 				<h2 className="mb-6 text-2xl font-bold text-center">Login</h2>
 
@@ -146,7 +146,7 @@ const LoginForm = () => {
 						</Link>
 					</p>
 					<p className="mt-2 text-sm">
-						Dont have an account?{" "}
+						Don`t have an account?{" "}
 						<Link href="/register" className="text-blue-500 hover:underline">
 							Sign Up
 						</Link>
