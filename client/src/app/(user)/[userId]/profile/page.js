@@ -30,13 +30,20 @@ export default function UserProfile() {
 		education: [],
 		work: [],
 	});
+	// 🔽 ADDED — post edit
+	const [editingPostId, setEditingPostId] = useState(null);
+	const [editPostContent, setEditPostContent] = useState("");
+
+	// 🔽 FIX — comment edit (per comment)
+	const [editingCommentId, setEditingCommentId] = useState(null);
+
 	const [newHobby, setNewHobby] = useState("");
 	const [following, setFollowing] = useState("");
 	const [followers, setFollowers] = useState("");
 
 	const [showFollowing, setShowFollowing] = useState(false);
 	const [showFollowers, setShowFollowers] = useState(false);
-	const [editingComment, setEditingComment] = useState(false);
+	// const [editingComment, setEditingComment] = useState(false);
 	const [editCommentText, setEditCommentText] = useState("");
 	const router = useRouter();
 	// Fetch profile (user info + posts)
@@ -99,6 +106,36 @@ export default function UserProfile() {
 			);
 		} catch (error) {
 			console.error("Error toggling like:", error);
+		}
+	};
+	// 🔽 ADDED — Update Post
+	const updatePost = async (postId) => {
+		if (!editPostContent.trim()) return;
+		try {
+			await axios.put(`http://localhost:8000/posts/${postId}`, {
+				content: editPostContent,
+			});
+
+			setPosts((prev) =>
+				prev.map((p) =>
+					p._id === postId ? { ...p, content: editPostContent } : p
+				)
+			);
+
+			setEditingPostId(null);
+			setEditPostContent("");
+		} catch (err) {
+			console.error("Update post error:", err);
+		}
+	};
+
+	//  Delete Post
+	const deletePost = async (postId) => {
+		try {
+			await axios.delete(`http://localhost:8000/posts/${postId}`);
+			setPosts((prev) => prev.filter((p) => p._id !== postId));
+		} catch (err) {
+			console.error("Delete post error:", err);
 		}
 	};
 
@@ -271,13 +308,15 @@ export default function UserProfile() {
 				)
 			);
 
-			setEditingComment(null);
+			// setEditingComment(null);
 			setEditCommentText("");
 		} catch (error) {
 			console.error(
 				"Error updating comment:",
 				error.response?.data || error.message
 			);
+		} finally {
+			setEditingCommentId(null);
 		}
 	};
 
@@ -321,7 +360,7 @@ export default function UserProfile() {
 						❮
 					</span>
 				</div>
-        <br/>
+				<br />
 				{/* User Info */}
 				<div className="mb-6 flex items-center gap-4">
 					<div className="w-16 h-16 rounded-full bg-blue-300 flex items-center justify-center  font-bold text-2xl text-black">
@@ -549,6 +588,7 @@ export default function UserProfile() {
 						</button>
 					</form>
 				)}
+
 				{/* display following and follower  */}
 				<div className="flex font-bold text-sm bg-gray-100 rounded-md overflow-hidden">
 					<Dialog>
@@ -639,10 +679,12 @@ export default function UserProfile() {
 					</div>
 				</div>
 				{/* show following and followers list  */}
+
 				{/* User Posts */}
 				{posts.length > 0 ? (
 					posts.map((post) => {
 						const liked = post.likes?.includes(userId);
+
 						return (
 							<div
 								key={post._id}
@@ -670,12 +712,14 @@ export default function UserProfile() {
 											</p>
 										</div>
 									</div>
+
 									<p className="flex items-start text-gray-700 leading-relaxed mb-4 break-all w-md">
 										<span className="break-all text-center text-2xl text-green-700">
 											{post.content}
 										</span>
 									</p>
 								</Link>
+
 								<div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
 									<button
 										onClick={() => toggleLike(post._id)}
@@ -687,54 +731,130 @@ export default function UserProfile() {
 									>
 										{liked ? "Unlike" : "Like"}
 									</button>
+
 									<span>
 										{post.likes?.length || 0}{" "}
 										{post.likes?.length === 1 ? "Like" : "Likes"}
 									</span>
 								</div>
-								<div className="border-t pt-2">
+
+								{/* --------- POST EDIT MODE ---- */}
+								{editingPostId === post._id ? (
+									<div className="flex gap-2 mb-3">
+										<input
+											value={editPostContent}
+											onChange={(e) => setEditPostContent(e.target.value)}
+											className="border flex-1 px-2 py-1 rounded"
+										/>
+										<button
+											onClick={() => updatePost(post._id)}
+											className="bg-green-500 text-white px-2 rounded"
+										>
+											save
+										</button>
+										<button
+											onClick={() => setEditingPostId(null)}
+											className="bg-gray-400 text-white px-2 rounded"
+										>
+											cancel
+										</button>
+									</div>
+								) : (
+									post.author?._id === userId && (
+										<div className="flex gap-2 text-xs mt-2">
+											<button
+												onClick={() => {
+													setEditingPostId(post._id);
+													setEditPostContent(post.content);
+												}}
+												className="bg-gray-500 text-white px-2 rounded"
+											>
+												Edit
+											</button>
+											<button
+												onClick={() => deletePost(post._id)}
+												className="bg-red-500 text-white px-2 rounded"
+											>
+												Delete
+											</button>
+										</div>
+									)
+								)}
+
+								{/* ===== COMMENTS ===== */}
+								<div className="border-t pt-2 mt-3">
 									<h3 className="text-sm font-semibold text-gray-700 mb-2">
 										Comments
 									</h3>
+
 									{post.comments?.length === 0 ? (
 										<p className="text-sm text-gray-500">No comments yet</p>
 									) : (
 										post.comments.map((c) => (
 											<div
 												key={c._id}
-												className="mb-2 flex justify-between items-center gap-2 text-sm"
+												className="mb-2 flex justify-between items-start gap-2 text-sm"
 											>
-												<div>
+												<div className="flex-1">
 													<div className="flex gap-2">
-														<p className="text-sm font-semibold">
-															{c.user.fullName}:
-														</p>
-														<p className="text-sm text-gray-600">{c.text}</p>
+														<p className="font-semibold">{c.user.fullName}:</p>
+														<p className="text-gray-600">{c.text}</p>
 													</div>
 													<p className="text-xs text-gray-400">
 														{new Date(c.createdAt).toLocaleString()}
 													</p>
+
+													{/* COMMENT EDIT MODE */}
+													{editingCommentId === c._id && (
+														<div className="flex gap-2 mt-1">
+															<input
+																value={editCommentText}
+																onChange={(e) =>
+																	setEditCommentText(e.target.value)
+																}
+																className="border px-2 py-1 rounded text-sm"
+															/>
+															<button
+																onClick={() => updateComment(post._id, c._id)}
+																className="bg-green-500 text-white px-2 rounded text-xs"
+															>
+																save
+															</button>
+															<button
+																onClick={() => setEditingCommentId(null)}
+																className="bg-gray-400 text-white px-2 rounded text-xs"
+															>
+																cancel
+															</button>
+														</div>
+													)}
 												</div>
-												<div className="flex gap-2">
-													<button
-														onClick={updateComment}
-														className="bg-gray-400 hover:bg-gray-500 rounded-md px-2 text-white"
-													>
-														edit
-													</button>
-													<button
-														onClick={deleteComment}
-														className="bg-red-500 hover:bg-red-600 rounded-md px-2 text-white"
-													>
-														delete
-													</button>
-												</div>
-												{editingComment && (
-													<input type="text" placeholder="enter" value="" />
+
+												{/* COMMENT ACTIONS (HIDDEN WHILE EDITING) */}
+												{editingCommentId !== c._id && (
+													<div className="flex gap-1">
+														<button
+															onClick={() => {
+																setEditingCommentId(c._id);
+																setEditCommentText(c.text);
+															}}
+															className="bg-gray-400 hover:bg-gray-500 rounded-md px-2 text-white"
+														>
+															edit
+														</button>
+														<button
+															onClick={() => deleteComment(post._id, c._id)}
+															className="bg-red-500 hover:bg-red-600 rounded-md px-2 text-white"
+														>
+															delete
+														</button>
+													</div>
 												)}
 											</div>
 										))
 									)}
+
+									{/* ADD COMMENT */}
 									<div className="mt-3 flex gap-2">
 										<input
 											type="text"
