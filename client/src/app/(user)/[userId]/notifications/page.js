@@ -105,14 +105,18 @@ export default function NotificationsPage() {
 					{notifications.map((notification) => (
 						<div
 							key={notification._id}
-							className={`p-4 rounded-sm shadow transition ${
+							className={`p-4  rounded-sm shadow transition ${
 								notification.isRead
-									? "bg-gray-100 border border-gray-200"
-									: "bg-green-200 border border-blue-100"
+									? "bg-gray-100 text-gray-800 border border-gray-200"
+									: "bg-blue-600 border border-blue-100 text-black"
 							}`}
 						>
 							{/* Notification message */}
-							<p className="text-gray-800">
+							<p
+								className={`${
+									notification.isRead ? "text-gray-800" : "text-gray-100"
+								}`}
+							>
 								<strong>{notification.sender?.fullName || "Someone"}</strong>{" "}
 								{notification.type === "like" && "liked your post."}
 								{notification.type === "comment" && "commented on your post."}
@@ -133,7 +137,7 @@ export default function NotificationsPage() {
 									{new Date(notification.createdAt).toLocaleString()}
 								</span>
 								{notification.isRead ? (
-									<span className="text-green-600 font-medium">Read</span>
+									<span className="text-green-500   font-medium">Read</span>
 								) : (
 									<button
 										onClick={() => markAsRead(notification._id)}
