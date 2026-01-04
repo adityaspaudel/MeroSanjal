@@ -11,7 +11,7 @@ const RegistrationForm = () => {
 	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	// ✅ Validation schema (added username validation)
 	const validationSchema = Yup.object({
 		fullName: Yup.string().required("Full Name is required"),
@@ -47,7 +47,7 @@ const RegistrationForm = () => {
 		onSubmit: async (values, { resetForm }) => {
 			try {
 				const response = await axios.post(
-					"http://localhost:8000/register",
+					`${NEXT_PUBLIC_API_URL}/register`,
 					values
 				);
 				console.log("Response Data:", response.data);

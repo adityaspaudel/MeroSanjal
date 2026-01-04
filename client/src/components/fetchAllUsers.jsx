@@ -4,6 +4,7 @@ import { React, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 export default function AllUsers() {
+	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	const params = useParams();
 	const currentUserId = params.userId;
 
@@ -15,7 +16,7 @@ export default function AllUsers() {
 	useEffect(() => {
 		const fetchUsers = async () => {
 			try {
-				const response = await fetch("http://localhost:8000/getAllUsers");
+				const response = await fetch(`${NEXT_PUBLIC_API_URL}/getAllUsers`);
 				if (!response.ok) throw new Error("Failed to fetch users");
 
 				const data = await response.json();
@@ -41,7 +42,7 @@ export default function AllUsers() {
 		setUpdating((prev) => ({ ...prev, [userId]: true }));
 		try {
 			const response = await fetch(
-				`http://localhost:8000/${currentUserId}/toggleFollowUnfollow`,
+				`${NEXT_PUBLIC_API_URL}/${currentUserId}/toggleFollowUnfollow`,
 				{
 					method: "PUT",
 					headers: { "Content-Type": "application/json" },

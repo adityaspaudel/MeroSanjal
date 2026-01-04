@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-
 import {
 	Dialog,
 	DialogContent,
@@ -12,7 +11,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-
 const HomeComponent = () => {
 	const { userId } = useParams();
 	const [posts, setPosts] = useState([]);
@@ -24,6 +22,7 @@ const HomeComponent = () => {
 	const [editingComment, setEditingComment] = useState(null);
 	const [editCommentText, setEditCommentText] = useState("");
 
+	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	useEffect(() => {
 		fetchPosts();
 	}, [userId]);
@@ -31,7 +30,7 @@ const HomeComponent = () => {
 	const fetchPosts = async () => {
 		try {
 			const { data } = await axios.get(
-				`http://localhost:8000/posts/${userId}/following`
+				`${NEXT_PUBLIC_API_URL}/posts/${userId}/following`
 			);
 			setPosts(data.posts || []);
 		} catch (error) {
@@ -59,7 +58,7 @@ const HomeComponent = () => {
 			formData.append("content", content);
 			images.forEach((img) => formData.append("images", img));
 
-			await axios.post("http://localhost:8000/posts/createPost", formData, {
+			await axios.post(`${NEXT_PUBLIC_API_URL}/posts/createPost`, formData, {
 				headers: { "Content-Type": "multipart/form-data" },
 			});
 
@@ -73,8 +72,9 @@ const HomeComponent = () => {
 
 	const updatePost = async (postId) => {
 		if (!editContent.trim()) return;
+
 		try {
-			await axios.put(`http://localhost:8000/posts/${postId}`, {
+			await axios.put(`${NEXT_PUBLIC_API_URL}/posts/${postId}`, {
 				content: editContent,
 			});
 			setPosts((prev) =>
@@ -89,7 +89,7 @@ const HomeComponent = () => {
 
 	const deletePost = async (postId) => {
 		try {
-			await axios.delete(`http://localhost:8000/posts/${postId}`);
+			await axios.delete(`${NEXT_PUBLIC_API_URL}/posts/${postId}`);
 			setPosts((prev) => prev.filter((p) => p._id !== postId));
 		} catch (error) {
 			console.error("Error deleting post:", error);
@@ -99,7 +99,7 @@ const HomeComponent = () => {
 	const toggleLike = async (postId) => {
 		try {
 			const { data } = await axios.put(
-				`http://localhost:8000/posts/${postId}/like`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/like`,
 				{ userId }
 			);
 			setPosts((prev) =>
@@ -125,7 +125,7 @@ const HomeComponent = () => {
 
 		try {
 			const { data } = await axios.post(
-				`http://localhost:8000/posts/${postId}/comments`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments`,
 				{ userId, postId, text }
 			);
 			setPosts((prev) =>
@@ -145,7 +145,7 @@ const HomeComponent = () => {
 		if (!editCommentText.trim()) return;
 		try {
 			await axios.put(
-				`http://localhost:8000/posts/${postId}/comments/${commentId}`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
 				{ userId, text: editCommentText }
 			);
 			setPosts((prev) =>
@@ -170,7 +170,7 @@ const HomeComponent = () => {
 	const deleteComment = async (postId, commentId) => {
 		try {
 			await axios.delete(
-				`http://localhost:8000/posts/${postId}/comments/${commentId}`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
 				{ data: { userId } }
 			);
 			setPosts((prev) =>

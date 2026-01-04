@@ -10,6 +10,7 @@ const LoginForm = () => {
 	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
 
+	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	// Validation Schema
 	const validationSchema = Yup.object({
 		email: Yup.string()
@@ -28,7 +29,7 @@ const LoginForm = () => {
 		validationSchema,
 		onSubmit: async (values, { resetForm }) => {
 			try {
-				const response = await fetch("http://localhost:8000/login", {
+				const response = await fetch(`${NEXT_PUBLIC_API_URL}/login`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

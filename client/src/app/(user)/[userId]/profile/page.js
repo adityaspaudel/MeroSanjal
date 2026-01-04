@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 
 export default function UserProfile() {
+	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	const { userId } = useParams();
 	const [user, setUser] = useState(null);
 	const [posts, setPosts] = useState([]);
@@ -54,7 +55,7 @@ export default function UserProfile() {
 			setLoading(true);
 			try {
 				const { data } = await axios.get(
-					`http://localhost:8000/users/${userId}/profile`
+					`${NEXT_PUBLIC_API_URL}/users/${userId}/profile`
 				);
 				console.log(data);
 				setUser(data.user);
@@ -88,7 +89,7 @@ export default function UserProfile() {
 	const toggleLike = async (postId) => {
 		try {
 			const { data } = await axios.put(
-				`http://localhost:8000/posts/${postId}/like`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/like`,
 				{ userId }
 			);
 
@@ -112,7 +113,7 @@ export default function UserProfile() {
 	const updatePost = async (postId) => {
 		if (!editPostContent.trim()) return;
 		try {
-			await axios.put(`http://localhost:8000/posts/${postId}`, {
+			await axios.put(`${NEXT_PUBLIC_API_URL}/posts/${postId}`, {
 				content: editPostContent,
 			});
 
@@ -132,7 +133,7 @@ export default function UserProfile() {
 	//  Delete Post
 	const deletePost = async (postId) => {
 		try {
-			await axios.delete(`http://localhost:8000/posts/${postId}`);
+			await axios.delete(`${NEXT_PUBLIC_API_URL}/posts/${postId}`);
 			setPosts((prev) => prev.filter((p) => p._id !== postId));
 		} catch (err) {
 			console.error("Delete post error:", err);
@@ -146,7 +147,7 @@ export default function UserProfile() {
 
 		try {
 			const { data } = await axios.post(
-				`http://localhost:8000/posts/${postId}/comments`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments`,
 				{ userId, text }
 			);
 
@@ -267,7 +268,7 @@ export default function UserProfile() {
 			};
 
 			const { data } = await axios.put(
-				`http://localhost:8000/users/${userId}/profile`,
+				`${NEXT_PUBLIC_API_URL}/users/${userId}/profile`,
 				formData
 			);
 
@@ -291,7 +292,7 @@ export default function UserProfile() {
 		if (!editCommentText.trim()) return;
 		try {
 			const { data } = await axios.put(
-				`http://localhost:8000/posts/${postId}/comments/${commentId}`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
 				{ userId, text: editCommentText } // only userId and text
 			);
 			console.log("data", data);
@@ -324,7 +325,7 @@ export default function UserProfile() {
 	const deleteComment = async (postId, commentId) => {
 		try {
 			await axios.delete(
-				`http://localhost:8000/posts/${postId}/comments/${commentId}`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
 				{ data: { userId } } // only send userId
 			);
 
