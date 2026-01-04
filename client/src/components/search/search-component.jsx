@@ -5,6 +5,7 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 
 const SearchComponent = () => {
+	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	const [fullName, setFullName] = useState("");
 	const [results, setResults] = useState([]);
 	const [followState, setFollowState] = useState({});
@@ -15,7 +16,7 @@ const SearchComponent = () => {
 	const handleSearch = async () => {
 		if (!fullName.trim()) return;
 		try {
-			const { data } = await axios.get("http://localhost:8000/search", {
+			const { data } = await axios.get(`${NEXT_PUBLIC_API_URL}/search`, {
 				params: { query: fullName, currentuserId: userId }, // ✅ send current user
 			});
 
@@ -35,7 +36,7 @@ const SearchComponent = () => {
 
 	const toggleFollowUnfollow = async (uid) => {
 		try {
-			await fetch(`http://localhost:8000/${userId}/toggleFollowUnfollow`, {
+			await fetch(`${NEXT_PUBLIC_API_URL}/${userId}/toggleFollowUnfollow`, {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ followingTo: uid }),

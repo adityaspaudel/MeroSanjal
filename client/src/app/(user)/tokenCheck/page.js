@@ -1,11 +1,12 @@
 import { getuserIdFromToken } from "@/lib/auth";
 import React from "react";
+
 export default async function Dashboard() {
   const userId = getuserIdFromToken();
 
   if (!userId) return <p>Not authenticated</p>;
 
-  const res = await fetch(`http://localhost:8000/user/${userId}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`, {
     cache: "no-store",
   });
 

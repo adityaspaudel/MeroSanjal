@@ -18,12 +18,12 @@ export default function IndividualPost() {
 	// post edit states
 	const [editingPost, setEditingPost] = useState(false);
 	const [editContent, setEditContent] = useState("");
-
+	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	// ================= FETCH POST =================
 	const fetchPost = async () => {
 		try {
 			const { data } = await axios.get(
-				`http://localhost:8000/${userId}/posts/${postId}/getPostById`
+				`${NEXT_PUBLIC_API_URL}/${userId}/posts/${postId}/getPostById`
 			);
 			setCurrentPost(data);
 		} catch (error) {
@@ -39,7 +39,7 @@ export default function IndividualPost() {
 	const toggleLike = async (postId) => {
 		try {
 			const { data } = await axios.put(
-				`http://localhost:8000/posts/${postId}/like`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/like`,
 				{ userId }
 			);
 
@@ -60,7 +60,7 @@ export default function IndividualPost() {
 
 		try {
 			const { data } = await axios.post(
-				`http://localhost:8000/posts/${currentPost._id}/comments`,
+				`${NEXT_PUBLIC_API_URL}/posts/${currentPost._id}/comments`,
 				{ userId, text: commentText }
 			);
 
@@ -81,7 +81,7 @@ export default function IndividualPost() {
 
 		try {
 			await axios.put(
-				`http://localhost:8000/posts/${postId}/comments/${commentId}`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
 				{ userId, text: editCommentText }
 			);
 
@@ -103,7 +103,7 @@ export default function IndividualPost() {
 	const deleteComment = async (postId, commentId) => {
 		try {
 			await axios.delete(
-				`http://localhost:8000/posts/${postId}/comments/${commentId}`,
+				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
 				{ data: { userId } }
 			);
 
@@ -121,7 +121,7 @@ export default function IndividualPost() {
 		if (!editContent.trim()) return;
 
 		try {
-			await axios.put(`http://localhost:8000/posts/${postId}`, {
+			await axios.put(`${NEXT_PUBLIC_API_URL}/posts/${postId}`, {
 				content: editContent,
 			});
 
@@ -140,7 +140,7 @@ export default function IndividualPost() {
 	// ================= DELETE POST =================
 	const deletePost = async (postId) => {
 		try {
-			await axios.delete(`http://localhost:8000/posts/${postId}`);
+			await axios.delete(`${NEXT_PUBLIC_API_URL}/posts/${postId}`);
 			router.back();
 		} catch (error) {
 			console.error("Delete post error:", error);

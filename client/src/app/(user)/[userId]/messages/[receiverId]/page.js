@@ -4,9 +4,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import io from "socket.io-client";
 
-// Connect to backend socket server
-const socket = io("http://localhost:8000");
-
 export default function ChatBoard() {
 	const { userId, receiverId } = useParams();
 
@@ -15,11 +12,18 @@ export default function ChatBoard() {
 	const [sender, setSender] = useState(null);
 	const [receiver, setReceiver] = useState(null);
 	const router = useRouter();
+
+	const fetchApi = () => {
+		return process.env.NEXT_PUBLIC_API_URL;
+	};
+	const NEXT_PUBLIC_API_URL = fetchApi();
+
+	const socket = io(`${NEXT_PUBLIC_API_URL}`);
 	// ------------------ FETCH USER DATA ------------------
 
 	const fetchUser = async (id, setUser) => {
 		try {
-			const response = await fetch(`http://localhost:8000/user/${id}`);
+			const response = await fetch(`${NEXT_PUBLIC_API_URL}/user/${id}`);
 			const data = await response.json();
 			setUser(data);
 			console.log("data", data);
@@ -38,7 +42,7 @@ export default function ChatBoard() {
 	const fetchMessages = useCallback(async () => {
 		try {
 			const res = await fetch(
-				`http://localhost:8000/messages/${userId}/${receiverId}/getMessages`
+				`${NEXT_PUBLIC_API_URL}/messages/${userId}/${receiverId}/getMessages`
 			);
 			const data = await res.json();
 			if (data.success) setMessages(data.messages);
@@ -76,7 +80,7 @@ export default function ChatBoard() {
 		if (!text.trim()) return;
 
 		try {
-			await fetch("http://localhost:8000/messages/sendMessage", {
+			await fetch(`${NEXT_PUBLIC_API_URL}/messages/sendMessage`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({

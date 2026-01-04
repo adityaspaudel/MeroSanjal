@@ -21,13 +21,13 @@ export function SocialMediaSidebarComponent() {
 	const [user, setUser] = useState(null);
 	const [unreadCount, setUnreadCount] = useState(0);
 	const [socket, setSocket] = useState(null);
-
+	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	useEffect(() => {
 		if (socket) console.log("🟢 Socket connected:", socket.id);
 	}, [socket]);
 
 	useEffect(() => {
-		const newSocket = io("http://localhost:8000", {
+		const newSocket = io(`${NEXT_PUBLIC_API_URL}`, {
 			transports: ["websocket"],
 		});
 		setSocket(newSocket);
@@ -46,7 +46,7 @@ export function SocialMediaSidebarComponent() {
 		const fetchUser = async () => {
 			try {
 				const { data } = await axios.get(
-					`http://localhost:8000/users/${userId}`
+					`${NEXT_PUBLIC_API_URL}/users/${userId}`
 				);
 				setUser(data);
 			} catch (err) {
@@ -60,7 +60,7 @@ export function SocialMediaSidebarComponent() {
 		const fetchUnreadCount = async () => {
 			try {
 				const { data } = await axios.get(
-					`http://localhost:8000/users/${userId}/notifications/unreadNotificationCount`
+					`${NEXT_PUBLIC_API_URL}/users/${userId}/notifications/unreadNotificationCount`
 				);
 				setUnreadCount(data.count);
 			} catch (err) {

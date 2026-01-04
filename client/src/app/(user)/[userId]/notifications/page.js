@@ -9,6 +9,7 @@ export default function NotificationsPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 	const router = useRouter();
+	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	// ✅ Fetch all notifications
 	const fetchNotifications = async () => {
 		if (!userId) return;
@@ -18,7 +19,7 @@ export default function NotificationsPage() {
 
 		try {
 			const res = await fetch(
-				`http://localhost:8000/users/${userId}/notifications`
+				`${NEXT_PUBLIC_API_URL}/users/${userId}/notifications`
 			);
 
 			if (!res.ok) throw new Error("Failed to fetch notifications");
@@ -40,7 +41,7 @@ export default function NotificationsPage() {
 	const markAsRead = async (notificationId) => {
 		try {
 			const res = await fetch(
-				`http://localhost:8000/users/${userId}/notifications/${notificationId}/read`,
+				`${NEXT_PUBLIC_API_URL}/users/${userId}/notifications/${notificationId}/read`,
 				{ method: "PUT" }
 			);
 

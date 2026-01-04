@@ -9,11 +9,13 @@ const UserMessageDashboard = () => {
 	const { userId } = useParams();
 	const [userDetails, setUserDetails] = useState(null);
 	const router = useRouter();
+
+	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	// alert(userId);
 	const getUserDetails = useCallback(async () => {
 		try {
 			const response = await fetch(
-				`http://localhost:8000/users/${userId}/getFollowingFriendsList`
+				`${NEXT_PUBLIC_API_URL}/users/${userId}/getFollowingFriendsList`
 			);
 			const data = await response.json();
 			if (!response.ok) throw new Error("error while fetching friends");
