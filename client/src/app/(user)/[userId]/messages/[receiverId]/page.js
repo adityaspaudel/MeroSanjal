@@ -118,7 +118,7 @@ export default function ChatBoard() {
 					</span>
 
 					<span className="text-blue-600 bg-white rounded-tr-2xl rounded-tl-2xl rounded-bl-2xl p-2">
-						{sender === null ? "You" : sender[0].author?.fullName} (You)
+						{sender === null ? "You" : sender[0]?.author?.fullName} (You)
 					</span>
 				</div>
 			</h2>

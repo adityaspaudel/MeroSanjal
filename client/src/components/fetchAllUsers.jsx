@@ -85,33 +85,35 @@ export default function AllUsers() {
 			{users.length === 0 ? (
 				<p className="text-gray-600">No users found.</p>
 			) : (
-				<div className="flex flex-col gap-4">
+				<div className="flex flex-col gap-2">
 					{users.map((user) => (
 						<div
 							key={user._id}
-							className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white hover:bg-gray-900 hover:text-white rounded-sm shadow hover:shadow-lg transition-shadow duration-200"
+							className="flex flex-col gap-2 sm:flex-row items-center justify-between p-4 bg-white hover:bg-gray-900 hover:text-white rounded-sm shadow hover:shadow-lg transition-shadow duration-200"
 						>
 							<div className="flex flex-col text-center sm:text-left sm:flex-1">
 								<p className="font-semibold ">{user.fullName}</p>
 								<p className="text-sm ">{user.email}</p>
 							</div>
-							{user._id !== currentUserId && (
-								<button
-									onClick={() => toggleFollow(user._id)}
-									disabled={updating[user._id]}
-									className={`mt-2 sm:mt-0 px-4 py-2 rounded-md text-white font-medium transition-colors duration-200 ${
-										user.isFollowing
-											? "bg-red-500 hover:bg-red-600"
-											: "bg-green-500 hover:bg-green-600"
-									}`}
-								>
-									{updating[user._id]
-										? "..."
-										: user.isFollowing
-										? "Unfollow"
-										: "Follow"}
-								</button>
-							)}
+							<div>
+								{user._id !== currentUserId && (
+									<button
+										onClick={() => toggleFollow(user._id)}
+										disabled={updating[user._id]}
+										className={`mt-2 sm:mt-0 px-4 py-2 rounded-md text-white font-medium transition-colors duration-200 ${
+											user.isFollowing
+												? "bg-red-500 hover:bg-red-600"
+												: "bg-green-500 hover:bg-green-600"
+										}`}
+									>
+										{updating[user._id]
+											? "..."
+											: user.isFollowing
+											? "Unfollow"
+											: "Follow"}
+									</button>
+								)}
+							</div>
 						</div>
 					))}
 				</div>
