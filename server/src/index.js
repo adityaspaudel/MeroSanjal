@@ -41,63 +41,83 @@ app.use(cookieParser()); // Parse cookies
 
 // swagger docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
-// Database
-dbConnect();
-
-// ------------------ SOCKET.IO SETUP ------------------
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    credentials: true,
-  },
+app.get("/", (req, res) => {
+	res.status(200).json({
+		success: true,
+		message: "MeroSanjal API is running 🚀",
+	});
 });
 
-// Inject socket instance to controllers
-setMessageSocket(io);
-setSocketInstance(io);
+// ------------------ DATABASE CONNECT ------------------
+const startServer = async () => {
+	try {
+		await dbConnect();
+		console.log("✅ MongoDB connected");
+
+		// ------------------ SOCKET.IO SETUP ------------------
+		const allowedOrigins = [
+			"http://localhost:3000",
+			"https://your-frontend.vercel.app",
+		];
+
+		const io = new Server(server, {
+			cors: {
+				origin: allowedOrigins,
+				methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+				credentials: true,
+			},
+		});
+
+		// Inject socket instance to controllers
+		setMessageSocket(io);
+		setSocketInstance(io);
+
+		// 🔥 socket.on("connection")
+		io.on("connection", (socket) => {
+			console.log("⚡ User connected:", socket.id);
+
+			socket.on("join", (userId) => {
+				socket.join(userId);
+				console.log(`👤 User ${userId} joined room`);
+			});
+
+			socket.on("disconnect", () => {
+				console.log("❌ User disconnected:", socket.id);
+			});
+		});
+
+		// ------------------ ROUTES ------------------
+		app.use(userRoute);
+		app.use(postRoute);
+		app.use(commentRoute);
+		app.use(notificationRoute);
+		app.use(messageRoute);
+
+		// routing error handling
+		app.use((req, res) => {
+			console.warn("Route not found:", req.originalUrl);
+			res.status(404).json({ message: "Route not found" });
+		});
+
+		// ------------------ SERVER LISTEN ------------------
+		const PORT = process.env.PORT || 8000;
+		server.listen(PORT, () => {
+			console.log(`Application is listening on port ${PORT}`);
+		});
+	} catch (error) {
+		console.error("❌ Database connection failed:", error.message);
+		process.exit(1);
+	}
+};
 
 // Catch unhandled errors
 process.on("uncaughtException", (error) => {
-  console.log("Uncaught Exception:", error);
+	console.log("Uncaught Exception:", error);
 });
 
 process.on("unhandledRejection", (error) => {
-  console.log("Unhandled Promise Rejection:", error.message);
-});
-// 🔥 socket.on("connection")
-io.on("connection", (socket) => {
-  console.log("⚡ User connected:", socket.id);
-
-  socket.on("join", (userId) => {
-    socket.join(userId);
-    console.log(`👤 User ${userId} joined room`);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("❌ User disconnected:", socket.id);
-  });
+	console.log("Unhandled Promise Rejection:", error.message);
 });
 
-// ------------------ ROUTES ------------------
-app.use(userRoute);
-app.use(postRoute);
-app.use(commentRoute);
-app.use(notificationRoute);
-app.use(messageRoute);
-
-// routing error handling 
-app.use((req, res) => {
-  console.error("Routing error:", req.originalUrl);
-  res.status(500).json({ message: "Routing error" });
-});
-// ------------------ SERVER LISTEN ------------------
-const PORT = process.env.PORT || 8000;
-try {
-  server.listen(PORT, () => {
-    console.log(`Application is listening on port ${PORT}`);
-  });
-} catch (error) {
-  console.log("Server startup error:", error);
-}
+// Start server with DB connection
+startServer();
