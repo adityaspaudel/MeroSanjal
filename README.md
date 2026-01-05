@@ -87,6 +87,13 @@
 
 ---
 
+## **Phase 4: Deployment to Vercel and Render**
+- [x] **Deployment**
+  - [x] Deployed frontend to vercel
+  - [x] Deployed backend to render
+
+
+---
 ## Getting Started
 
 1. Clone the repository
@@ -126,8 +133,12 @@
 
 6. Backend server will run on [http://localhost:8000](http://localhost:8000) by default.
 
-# Project Screenshots
+## 🌐 Live Demo
 
+- **Frontend (Vercel):** https://merosanjall.vercel.app
+- **Backend (Render):** https://merosanjal.onrender.com/
+
+# Project Screenshots
 
 ## User Registration
 
@@ -136,6 +147,7 @@
 ## User Login
 
 ![User Login](./client/public/screenshots/userLogin.png)
+
 ## User Home
 
 ![User Home](./client/public/screenshots/home.png)
