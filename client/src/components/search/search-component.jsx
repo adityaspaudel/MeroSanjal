@@ -75,7 +75,7 @@ const SearchComponent = () => {
 			/>
 			<button
 				onClick={handleSearch}
-				className="ml-2 p-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md"
+				className="ml-2 p-2 bg-green-500 hover:bg-green-600 text-white rounded-md"
 			>
 				Search
 			</button>

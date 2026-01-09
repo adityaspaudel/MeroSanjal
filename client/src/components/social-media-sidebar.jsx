@@ -2,12 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { FaConnectdevelop, FaUserAlt, FaBell } from "react-icons/fa";
-import {
-	IoHomeSharp,
-	IoLogOut,
-	// IoSettingsSharp,
-	IoMail,
-} from "react-icons/io5";
+import { IoHomeSharp, IoLogOut, IoMail } from "react-icons/io5";
 import { RiSearchFill } from "react-icons/ri";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -15,6 +10,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { io } from "socket.io-client";
+import PropTypes from "prop-types";
 
 export function SocialMediaSidebarComponent() {
 	const { userId } = useParams();
@@ -23,10 +19,7 @@ export function SocialMediaSidebarComponent() {
 	const [socket, setSocket] = useState(null);
 	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	useEffect(() => {
-		if (socket) console.log("🟢 Socket connected:", socket.id);
-	}, [socket]);
-
-	useEffect(() => {
+		console.log(socket);
 		const newSocket = io(`${NEXT_PUBLIC_API_URL}`, {
 			transports: ["websocket"],
 		});
@@ -35,9 +28,6 @@ export function SocialMediaSidebarComponent() {
 		if (userId) newSocket.emit("join", userId);
 
 		newSocket.on("updateUnreadCount", (data) => setUnreadCount(data.count));
-		newSocket.on("newNotification", (data) =>
-			console.log("🔔 New notification:", data)
-		);
 
 		return () => newSocket.disconnect();
 	}, [userId]);
@@ -50,123 +40,68 @@ export function SocialMediaSidebarComponent() {
 				);
 				setUser(data);
 			} catch (err) {
-				console.error("Error fetching user:", err);
+				console.error(err);
 			}
 		};
 		if (userId) fetchUser();
 	}, [userId]);
 
-	useEffect(() => {
-		const fetchUnreadCount = async () => {
-			try {
-				const { data } = await axios.get(
-					`${NEXT_PUBLIC_API_URL}/users/${userId}/notifications/unreadNotificationCount`
-				);
-				setUnreadCount(data.count);
-			} catch (err) {
-				console.error("Error fetching unread count:", err);
-			}
-		};
-		if (userId) fetchUnreadCount();
-	}, [userId]);
-
 	return (
-		<div className="h-screen sticky top-0 shadow hover:shadow-black hover:shadow-md transition 1s">
-			<div className="flex flex-col justify-between h-full w-[80px] sm:w-[100px] md:w-[100px] xl:w-[300px]   bg-white shadow-lg px-2 py-4">
-				{/* -------- TOP SECTION -------- */}
+		<div className="h-screen sticky top-0">
+			<div
+				className="flex flex-col justify-between h-full w-[50px] sm:w-[100px] xl:w-[320px]
+				bg-green-950 border-r border-green-900 px-2 py-4 text-gray-200"
+			>
+				{/* ---------- TOP ---------- */}
 				<div className="space-y-6">
 					{/* Logo */}
 					<Link
 						href={`/${userId}/home`}
-						className="flex items-center gap-2 px-3"
+						className="flex items-center gap-3 px-3"
 					>
-						<FaConnectdevelop className="text-3xl text-green-600" />
-						<h2 className="hidden md:block text-xl font-bold text-gray-800 hover:text-green-600">
+						<FaConnectdevelop className="text-3xl text-green-400" />
+						<h2 className="hidden xl:block text-xl font-bold text-white">
 							Mero Sanjal
 						</h2>
 					</Link>
 
-					{/* Nav Links */}
-					<div className="flex flex-col gap-2">
-						{/* Home */}
-						<Link href={`/${userId}/home`}>
-							<Button
-								variant="ghost"
-								className="w-full justify-start  hover:bg-gray-900 rounded-sm hover:text-white"
-							>
-								<IoHomeSharp className="text-xl" />
-								<span className="hidden md:block ml-2 font-medium">Home</span>
-							</Button>
-						</Link>
-
-						{/* Search */}
-						<Link href={`/${userId}/search`}>
-							<Button
-								variant="ghost"
-								className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-sm"
-							>
-								<RiSearchFill className="text-xl" />
-								<input
-									type="text"
-									placeholder="Search"
-									className="hidden md:block ml-2 bg-transparent focus:outline-none w-full"
-								/>
-							</Button>
-						</Link>
-
-						{/* Notifications */}
-						<Link href={`/${userId}/notifications`}>
-							<Button
-								variant="ghost"
-								className="relative w-full justify-start hover:bg-gray-900 hover:text-white rounded-sm"
-							>
-								<FaBell className="text-xl" />
-								{unreadCount > 0 && (
-									<span className="absolute top-0 left-6 -translate-y-1/2 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
-										{unreadCount > 10 ? "10+" : unreadCount}
-									</span>
-								)}
-								<span className="hidden md:block ml-2 font-medium">
-									Notifications
-								</span>
-							</Button>
-						</Link>
-
-						{/* Messages */}
-						<Link href={`/${userId}/messages`}>
-							<Button
-								variant="ghost"
-								className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-sm"
-							>
-								<IoMail className="text-xl" />
-								<span className="hidden md:block ml-2 font-medium">
-									Messages
-								</span>
-							</Button>
-						</Link>
-
-						{/* Profile */}
-						<Link href={`/${userId}/profile`}>
-							<Button
-								variant="ghost"
-								className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-sm"
-							>
-								<FaUserAlt className="text-xl" />
-								<span className="hidden md:block ml-2 font-medium">
-									Profile
-								</span>
-							</Button>
-						</Link>
+					{/* Navigation */}
+					<div className="flex flex-col gap-1">
+						<SidebarLink
+							href={`/${userId}/home`}
+							icon={<IoHomeSharp />}
+							label="Home"
+						/>
+						<SidebarSearchLink
+							href={`/${userId}/search`}
+							icon={<RiSearchFill />}
+						/>
+						<SidebarNotificationLink
+							href={`/${userId}/notifications`}
+							icon={<FaBell />}
+							count={unreadCount}
+						/>
+						<SidebarLink
+							href={`/${userId}/messages`}
+							icon={<IoMail />}
+							label="Messages"
+						/>
+						<SidebarLink
+							href={`/${userId}/profile`}
+							icon={<FaUserAlt />}
+							label="Profile"
+						/>
 					</div>
 				</div>
 
-				{/* -------- BOTTOM SECTION -------- */}
-				<div className="space-y-3 ">
+				{/* ---------- BOTTOM ---------- */}
+				<div className="space-y-3">
 					{/* User Info */}
 					{user && (
 						<Link
 							href={`/${userId}/profile`}
-							className="flex items-center gap-2 p-2 rounded-sm hover:bg-gray-900 hover:text-white transition "
+							className="flex items-center gap-3 p-3 rounded-lg
+								hover:bg-green-900 transition"
 						>
 							<Avatar>
 								<AvatarImage
@@ -174,29 +109,25 @@ export function SocialMediaSidebarComponent() {
 									alt={user.fullName}
 								/>
 							</Avatar>
-							<div className="hidden md:flex flex-col hover:text-white">
-								<p className="text-sm font-semibold ">{user.fullName}</p>
-								<p className="text-xs  ">@{user.email.split("@")[0]}</p>
+							<div className="hidden xl:block">
+								<p className="text-sm font-semibold text-white">
+									{user.fullName}
+								</p>
+								<p className="text-xs text-gray-400">
+									@{user.email.split("@")[0]}
+								</p>
 							</div>
 						</Link>
 					)}
 
-					{/* Settings */}
-					{/* <Link href={`/${userId}/userSettings`}>
-						<Button
-							variant="ghost"
-							className="w-full justify-start hover:bg-gray-900 hover:text-white rounded-sm"
-						>
-							<IoSettingsSharp className="text-xl" />
-							<span className="hidden md:block ml-2 font-medium">Settings</span>
-						</Button>
-					</Link> */}
-
 					{/* Logout */}
 					<Link href="/">
-						<Button className="w-full justify-start text-red-600 hover:bg-red-900 hover:text-white rounded-sm font-bold">
+						<Button
+							variant="ghost"
+							className="w-full justify-start text-red-400 hover:bg-red-900/40 hover:text-white rounded-lg"
+						>
 							<IoLogOut className="text-xl" />
-							<span className="hidden md:block ml-2">Logout</span>
+							<span className="hidden xl:block ml-3 font-medium">Logout</span>
 						</Button>
 					</Link>
 				</div>
@@ -204,3 +135,81 @@ export function SocialMediaSidebarComponent() {
 		</div>
 	);
 }
+
+/* ---------- Reusable UI Components ---------- */
+
+function SidebarLink({ href, icon, label }) {
+	return (
+		<Link href={href}>
+			<Button
+				variant="ghost"
+				className="w-full justify-start rounded-lg
+					text-gray-200 hover:bg-green-900 hover:text-white transition"
+			>
+				<span className="text-xl">{icon}</span>
+				<span className="hidden xl:block ml-3 font-medium">{label}</span>
+			</Button>
+		</Link>
+	);
+}
+
+SidebarLink.propTypes = {
+	href: PropTypes.string.isRequired,
+	icon: PropTypes.node.isRequired,
+	label: PropTypes.string.isRequired,
+};
+
+function SidebarSearchLink({ href, icon }) {
+	return (
+		<Link href={href}>
+			<Button
+				variant="ghost"
+				className="w-full justify-start rounded-lg
+					text-gray-200 hover:bg-green-900 hover:text-white transition"
+			>
+				<span className="text-xl">{icon}</span>
+				<input
+					type="text"
+					placeholder="Search"
+					className="hidden xl:block ml-3 w-full bg-transparent focus:outline-none text-sm placeholder-gray-400"
+				/>
+			</Button>
+		</Link>
+	);
+}
+
+SidebarSearchLink.propTypes = {
+	href: PropTypes.string.isRequired,
+	icon: PropTypes.node.isRequired,
+};
+
+function SidebarNotificationLink({ href, icon, count }) {
+	return (
+		<Link href={href}>
+			<Button
+				variant="ghost"
+				className="relative w-full justify-start rounded-lg
+					text-gray-200 hover:bg-green-900 hover:text-white transition"
+			>
+				<span className="text-xl">{icon}</span>
+
+				{count > 0 && (
+					<span
+						className="absolute left-6 top-1 bg-red-500 text-white text-[10px]
+						h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center"
+					>
+						{count > 9 ? "9+" : count}
+					</span>
+				)}
+
+				<span className="hidden xl:block ml-3 font-medium">Notifications</span>
+			</Button>
+		</Link>
+	);
+}
+
+SidebarNotificationLink.propTypes = {
+	href: PropTypes.string.isRequired,
+	icon: PropTypes.node.isRequired,
+	count: PropTypes.number.isRequired,
+};
