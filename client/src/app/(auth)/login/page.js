@@ -11,7 +11,7 @@ const LoginForm = () => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-	// Validation Schema
+
 	const validationSchema = Yup.object({
 		email: Yup.string()
 			.email("Invalid email address")
@@ -31,61 +31,48 @@ const LoginForm = () => {
 			try {
 				const response = await fetch(`${NEXT_PUBLIC_API_URL}/login`, {
 					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
+					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify(values),
 				});
 
 				const data = await response.json();
 
-				console.log("Response Data:", data);
-				// for understanding
-				// Check for success status before proceeding
 				if (response.ok) {
-					// Store token and userId (as id) in localStorage if available
-					if (data.token) {
-						localStorage.setItem("token", data.token);
-					}
-					if (data.user && data.user.id) {
-						localStorage.setItem("id", data.user.id); // Store userId as 'id' in localStorage
-					}
+					if (data.token) localStorage.setItem("token", data.token);
+					if (data.user?.id) localStorage.setItem("id", data.user.id);
 
 					alert("Login successful!");
 					resetForm();
-					console.log(data.user.id);
 					router.push(`/${data.user.id}/home`);
-					// Redirect to home page
 				} else {
-					// Show error message from the response
-					alert(data.message || "Login failed. Please try again.");
+					alert(data.message || "Login failed");
 				}
 			} catch (error) {
-				console.error("Error during login:", error);
-				alert("An error occurred. Please try again.");
+				console.error(error);
+				alert("Something went wrong");
 			}
 		},
 	});
 
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-50  to-gray-200">
+		<div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-950 via-green-900 to-gray-900">
 			<form
 				onSubmit={formik.handleSubmit}
-				className="w-full max-w-md p-6 bg-white rounded-sm shadow shadow-gray-200 transition 3s hover:shadow-black border"
+				className="w-full max-w-md p-8 bg-gray-100 rounded-xl shadow-2xl border border-gray-300"
 			>
-				<h2 className="mb-6 text-2xl font-bold text-center">Login</h2>
+				<h2 className="mb-6 text-3xl font-bold text-center text-green-900">
+					Welcome Back
+				</h2>
 
-				{/* Email Input */}
+				{/* Email */}
 				<div className="mb-4">
-					<label htmlFor="email" className="block mb-1 font-medium">
+					<label className="block mb-1 text-sm font-medium text-gray-700">
 						Email
 					</label>
 					<input
 						type="email"
-						id="email"
-						name="email"
-						placeholder="Enter your email"
-						className={`w-full px-3 py-2 border rounded ${
+						placeholder="you@example.com"
+						className={`w-full px-4 py-2 rounded-md bg-gray-50 border focus:outline-none focus:ring-2 focus:ring-green-700 ${
 							formik.touched.email && formik.errors.email
 								? "border-red-500"
 								: "border-gray-300"
@@ -93,22 +80,22 @@ const LoginForm = () => {
 						{...formik.getFieldProps("email")}
 					/>
 					{formik.touched.email && formik.errors.email && (
-						<p className="mt-1 text-xs text-red-500">{formik.errors.email}</p>
+						<p className="mt-1 text-xs text-red-600">
+							{formik.errors.email}
+						</p>
 					)}
 				</div>
 
-				{/* Password Input with Visibility Toggle */}
-				<div className="mb-4">
-					<label htmlFor="password" className="block mb-1 font-medium">
+				{/* Password */}
+				<div className="mb-5">
+					<label className="block mb-1 text-sm font-medium text-gray-700">
 						Password
 					</label>
 					<div className="relative">
 						<input
 							type={showPassword ? "text" : "password"}
-							id="password"
-							name="password"
-							placeholder="Enter your password"
-							className={`w-full px-3 py-2 border rounded pr-10 ${
+							placeholder="••••••••"
+							className={`w-full px-4 py-2 pr-12 rounded-md bg-gray-50 border focus:outline-none focus:ring-2 focus:ring-green-700 ${
 								formik.touched.password && formik.errors.password
 									? "border-red-500"
 									: "border-gray-300"
@@ -117,38 +104,44 @@ const LoginForm = () => {
 						/>
 						<button
 							type="button"
-							className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-500"
 							onClick={() => setShowPassword(!showPassword)}
+							className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-green-800 transition"
 						>
-							{showPassword ? "🙈" : "👁️"}
+							{showPassword ? "show" : "hide"}
 						</button>
 					</div>
 					{formik.touched.password && formik.errors.password && (
-						<p className="mt-1 text-xs text-red-500">
+						<p className="mt-1 text-xs text-red-600">
 							{formik.errors.password}
 						</p>
 					)}
 				</div>
 
-				{/* Submit Button */}
+				{/* Button */}
 				<button
 					type="submit"
-					className="w-full py-2 text-white bg-green-500 rounded hover:bg-green-600"
 					disabled={formik.isSubmitting}
+					className="w-full py-2.5 rounded-md text-white font-semibold bg-green-800 hover:bg-green-900 transition-all disabled:opacity-60"
 				>
 					{formik.isSubmitting ? "Logging in..." : "Login"}
 				</button>
 
-				{/* Additional Links */}
-				<div className="mt-4 text-center">
-					<p className="text-sm">
-						<Link href="/recovery" className="text-blue-500 hover:underline">
+				{/* Links */}
+				<div className="mt-5 text-center text-sm text-gray-700">
+					<p>
+						<Link
+							href="/recovery"
+							className="text-green-800 hover:underline"
+						>
 							Recover Account
 						</Link>
 					</p>
-					<p className="mt-2 text-sm">
-						Don`t have an account?{" "}
-						<Link href="/register" className="text-blue-500 hover:underline">
+					<p className="mt-2">
+						Don’t have an account?{" "}
+						<Link
+							href="/register"
+							className="text-green-800 font-medium hover:underline"
+						>
 							Sign Up
 						</Link>
 					</p>
