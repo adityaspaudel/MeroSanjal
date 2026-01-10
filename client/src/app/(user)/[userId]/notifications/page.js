@@ -108,8 +108,8 @@ export default function NotificationsPage() {
 							key={notification._id}
 							className={`p-4  rounded-sm shadow transition ${
 								notification.isRead
-									? "bg-gray-100 text-gray-800 border border-gray-200"
-									: "bg-blue-600 border border-blue-100 text-black"
+									? "bg-white-100 hover:bg-gray-200 text-gray-800 border border-gray-200"
+									: "bg-green-900 hover:bg-green-800 border border-blue-100 text-black"
 							}`}
 						>
 							{/* Notification message */}
@@ -128,21 +128,29 @@ export default function NotificationsPage() {
 							</p>
 							{/* Optional post info */}
 							{notification.post && (
-								<p className="text-sm text-gray-500 mt-1 italic">
+								<p
+									className={`text-sm ${
+										notification.isRead ? "text-gray-600" : "text-gray-200"
+									} mt-1 italic`}
+								>
 									“{notification.post.content.slice(0, 60)}...”
 								</p>
 							)}
 							{/* Footer (timestamp + actions) */}
 							<div className="flex justify-between items-center mt-3 text-sm">
-								<span className="text-gray-400">
+								<span
+									className={`text-sm ${
+										notification.isRead ? "text-gray-600" : "text-gray-200"
+									}`}
+								>
 									{new Date(notification.createdAt).toLocaleString()}
 								</span>
 								{notification.isRead ? (
-									<span className="text-green-500   font-medium">Read</span>
+									<span className="text-green-600   font-medium ">Read</span>
 								) : (
 									<button
 										onClick={() => markAsRead(notification._id)}
-										className="text-blue-600 hover:underline"
+										className="text-blue-100 hover:underline "
 									>
 										Mark as Read
 									</button>
