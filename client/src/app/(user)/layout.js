@@ -1,5 +1,6 @@
 import AllUsers from "@/components/fetchAllUsers";
-import { SocialMediaSidebarComponent } from "@/components/social-media-sidebar";
+import SocialMediaSidebarComponent from "@/components/social-media-sidebar";
+
 import React from "react";
 
 const UserLayout = ({ children }) => {

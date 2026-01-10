@@ -57,7 +57,7 @@ const startServer = async () => {
 		// ------------------ SOCKET.IO SETUP ------------------
 		const allowedOrigins = [
 			"http://localhost:3000",
-			"https://merosanjall.vercel.app",
+			"https://merosanjal.vercel.app",
 		];
 
 		const io = new Server(server, {
