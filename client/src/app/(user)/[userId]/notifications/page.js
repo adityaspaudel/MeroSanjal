@@ -60,8 +60,28 @@ export default function NotificationsPage() {
 	// ✅ UI States
 	if (loading)
 		return (
-			<div className="flex justify-center items-center h-screen text-gray-600">
-				<p>Loading notifications...</p>
+			<div className="flex justify-center items-center h-screen">
+				<div className="w-full max-w-xl space-y-4 animate-pulse">
+					<h1 className="text-2xl font-semibold mb-6 h-10 w-20"></h1>
+					{Array.from({ length: 10 }).map((_, index) => (
+						<div
+							key={index}
+							className="p-4 rounded-sm shadow border border-gray-200 bg-gray-100"
+						>
+							{/* Notification message */}
+							<div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+
+							{/* Optional post info */}
+							<div className="h-3 bg-gray-300 rounded w-1/2 mb-3"></div>
+
+							{/* Footer */}
+							<div className="flex justify-between items-center">
+								<div className="h-3 bg-gray-300 rounded w-1/4"></div>
+								<div className="h-3 bg-gray-300 rounded w-16"></div>
+							</div>
+						</div>
+					))}
+				</div>
 			</div>
 		);
 
