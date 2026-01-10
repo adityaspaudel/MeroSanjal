@@ -142,35 +142,35 @@
 
 ## User Registration
 
-![User Register](./client/public/screenshots/userRegister.png)
+![User Register](./client/public/screenshots/userRegister2.png)
 
 ## User Login
 
-![User Login](./client/public/screenshots/userLogin.png)
+![User Login](./client/public/screenshots/userLogin2.png)
 
 ## User Home
 
-![User Home](./client/public/screenshots/home.png)
+![User Home](./client/public/screenshots/home2.png)
 
 ## User Search
 
-![User Search](./client/public/screenshots/userSearch.png)
+![User Search](./client/public/screenshots/userSearch2.png)
 
 ## User Profile
 
-![User Profile](./client/public/screenshots/profile.png)
+![User Profile](./client/public/screenshots/profile2.png)
 
 ## User Edit / Update
 
-![User ProfileEdit](./client/public/screenshots/profileEdit.png)
+![User ProfileEdit](./client/public/screenshots/profileEdit2.png)
 
 ## User Notifications
 
-![User Notifications](./client/public/screenshots/notifications.png)
+![User Notifications](./client/public/screenshots/notifications2.png)
 
 ## User Chat between User
 
-![User Chatboard](./client/public/screenshots/chat.png)
+![User Chatboard](./client/public/screenshots/chat2.png)
 
 <!-- ## Contributing
 

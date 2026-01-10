@@ -68,8 +68,24 @@ export default function AllUsers() {
 
 	if (loading)
 		return (
-			<div className="flex justify-center items-center h-screen bg-green-50">
-				<p className="text-gray-600 text-lg">Loading users...</p>
+			<div className="space-y-4 animate-pulse border p-4">
+				{Array.from({ length: 10 }).map((_, index) => (
+					<div
+						key={index}
+						className="flex flex-col gap-2 sm:flex-row items-center justify-between p-4 bg-gray-100 rounded-sm shadow"
+					>
+						{/* Name + Email */}
+						<div className="flex flex-col text-center sm:text-left sm:flex-1 gap-2">
+							<div className="h-4 bg-gray-300 rounded w-40 mx-auto sm:mx-0"></div>
+							<div className="h-3 bg-gray-300 rounded w-40 mx-auto sm:mx-0"></div>
+						</div>
+
+						{/* Follow button skeleton */}
+						<div className="mt-2 sm:mt-0">
+							<div className="h-9 w-24 bg-gray-300 rounded-md"></div>
+						</div>
+					</div>
+				))}
 			</div>
 		);
 

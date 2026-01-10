@@ -21,7 +21,7 @@ const HomeComponent = () => {
 	const [editContent, setEditContent] = useState("");
 	const [editingComment, setEditingComment] = useState(null);
 	const [editCommentText, setEditCommentText] = useState("");
-
+	const [loading, setLoading] = useState(true);
 	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 	useEffect(() => {
 		fetchPosts();
@@ -36,6 +36,8 @@ const HomeComponent = () => {
 		} catch (error) {
 			console.error("Error fetching posts:", error);
 			alert(JSON.stringify(error, 2, 2));
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -166,7 +168,83 @@ const HomeComponent = () => {
 			console.error("Error updating comment:", error);
 		}
 	};
+	if (loading) {
+		return (
+			<div className="p-6 max-w-xl mx-auto animate-pulse">
+				{/* Create Post Skeleton */}
+				<div className="mb-6 p-4 rounded-sm bg-white shadow-lg border space-y-3">
+					<div className="h-20 bg-gray-300 rounded-sm"></div>
+					{/* <div className="h-4 w-32 bg-gray-300 rounded-sm"></div> */}
 
+					<div className="flex gap-2 flex-wrap">
+						<div className="w-24 h-8 bg-gray-300 rounded-sm"></div>
+						<div className="w-24 h-8 bg-gray-300 rounded-sm"></div>
+					</div>
+
+					<div className="h-10 w-24 bg-gray-300 rounded-sm"></div>
+				</div>
+
+				{/* Posts Skeleton */}
+				<div className="space-y-6">
+					{Array.from({ length: 3 }).map((_, index) => (
+						<div
+							key={index}
+							className="flex flex-col gap-4 p-4 rounded-sm shadow-md border bg-white"
+						>
+							{/* Author */}
+							<div className="flex gap-3 items-center">
+								<div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+								<div className="space-y-2">
+									<div className="h-4 w-32 bg-gray-300 rounded"></div>
+									<div className="h-3 w-24 bg-gray-300 rounded"></div>
+								</div>
+							</div>
+
+							{/* Post Content */}
+							<div className="space-y-2">
+								<div className="h-4 bg-gray-300 rounded w-full"></div>
+								<div className="h-4 bg-gray-300 rounded w-5/6"></div>
+								<div className="h-4 bg-gray-300 rounded w-2/3"></div>
+							</div>
+
+							{/* Images */}
+							<div className="flex gap-2 flex-wrap justify-center">
+								<div className="w-32 h-32 bg-gray-300 rounded-sm"></div>
+								<div className="w-32 h-32 bg-gray-300 rounded-sm"></div>
+							</div>
+
+							{/* Actions */}
+							<div className="flex justify-between items-center">
+								<div className="flex gap-2 items-center">
+									<div className="h-8 w-20 bg-gray-300 rounded-sm"></div>
+									<div className="h-4 w-16 bg-gray-300 rounded"></div>
+								</div>
+								<div className="flex gap-2">
+									<div className="h-8 w-16 bg-gray-300 rounded-sm"></div>
+									<div className="h-8 w-16 bg-gray-300 rounded-sm"></div>
+								</div>
+							</div>
+
+							{/* Comments */}
+							<div className="bg-gray-200 p-4 rounded-sm space-y-3">
+								<div className="h-4 w-24 bg-gray-300 rounded"></div>
+
+								<div className="space-y-2">
+									<div className="h-3 bg-gray-300 rounded w-full"></div>
+									<div className="h-3 bg-gray-300 rounded w-5/6"></div>
+								</div>
+
+								<div className="flex gap-2">
+									<div className="h-10 flex-1 bg-gray-300 rounded-sm"></div>
+									<div className="h-10 w-20 bg-gray-300 rounded-sm"></div>
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		);
+	}
 	const deleteComment = async (postId, commentId) => {
 		try {
 			await axios.delete(
