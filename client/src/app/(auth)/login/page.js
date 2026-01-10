@@ -128,14 +128,7 @@ const LoginForm = () => {
 
 				{/* Links */}
 				<div className="mt-5 text-center text-sm text-gray-700">
-					<p>
-						<Link
-							href="/recovery"
-							className="text-green-800 hover:underline"
-						>
-							Recover Account
-						</Link>
-					</p>
+					
 					<p className="mt-2">
 						Don’t have an account?{" "}
 						<Link
