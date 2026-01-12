@@ -13,7 +13,8 @@ import { useParams } from "next/navigation";
 const SocialMediaSidebarComponent = () => {
 	const { userId } = useParams();
 	const [user, setUser] = useState(null);
-	const [unreadCount, setUnreadCount] = useState(0);
+	const [unreadNotifications, setUnreadNotifications] = useState(0);
+	const [unreadMessages, setUnreadMessages] = useState(0);
 	const socketRef = useRef(null);
 	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -21,19 +22,24 @@ const SocialMediaSidebarComponent = () => {
 	useEffect(() => {
 		if (!userId) return;
 
-		socketRef.current = require("socket.io-client")(NEXT_PUBLIC_API_URL, {
-			transports: ["websocket"],
-		});
+		const io = require("socket.io-client");
+		socketRef.current = io(NEXT_PUBLIC_API_URL, { transports: ["websocket"] });
 
+		// Join user room
 		socketRef.current.emit("join", userId);
 
-		socketRef.current.on("updateUnreadCount", (data) => {
-			setUnreadCount(data.count);
-		});
+		// Listen for notifications
+		socketRef.current.on("updateUnreadCount", (data) =>
+			setUnreadNotifications(data.count)
+		);
+		socketRef.current.on("newNotification", () =>
+			setUnreadNotifications((prev) => prev + 1)
+		);
 
-		socketRef.current.on("newNotification", (data) => {
-			setUnreadCount((prev) => prev + 1);
-		});
+		// Listen for new messages
+		socketRef.current.on("newMessage", () =>
+			setUnreadMessages((prev) => prev + 1)
+		);
 
 		return () => socketRef.current.disconnect();
 	}, [userId, NEXT_PUBLIC_API_URL]);
@@ -41,6 +47,7 @@ const SocialMediaSidebarComponent = () => {
 	// ---------- Fetch User ----------
 	useEffect(() => {
 		if (!userId) return;
+
 		const fetchUser = async () => {
 			try {
 				const { data } = await axios.get(
@@ -48,29 +55,36 @@ const SocialMediaSidebarComponent = () => {
 				);
 				setUser(data);
 			} catch (err) {
-				console.error(err);
+				console.error("Failed to fetch user:", err);
 			}
 		};
+
 		fetchUser();
 	}, [userId, NEXT_PUBLIC_API_URL]);
 
-	// ---------- Fetch Initial Unread Count ----------
+	// ---------- Fetch initial unread counts ----------
 	useEffect(() => {
 		if (!userId) return;
-		const fetchUnread = async () => {
-			try {
-				// /users/:userId/notifications/unreadNotificationCount
 
-				const res = await axios.get(
+		const fetchCounts = async () => {
+			try {
+				const notifRes = await axios.get(
 					`${NEXT_PUBLIC_API_URL}/users/${userId}/notifications/unreadNotificationCount`
 				);
-				setUnreadCount(res.data.count);
+				setUnreadNotifications(notifRes.data.count || 0);
+
+				const msgRes = await axios.get(
+					`${NEXT_PUBLIC_API_URL}/messages/${userId}/unreadCount`
+				);
+				setUnreadMessages(msgRes.data.count || 0);
 			} catch (err) {
-				console.error(err);
+				console.error("Failed to fetch unread counts:", err);
 			}
 		};
-		fetchUnread();
+
+		fetchCounts();
 	}, [userId, NEXT_PUBLIC_API_URL]);
+
 	return (
 		<div className="h-screen sticky top-0">
 			<div className="flex flex-col justify-between h-full w-[50px] sm:w-[100px] xl:w-[320px] bg-green-950 border-r border-green-900 px-2 py-4 text-gray-200">
@@ -128,9 +142,9 @@ const SocialMediaSidebarComponent = () => {
 								<span className="text-xl">
 									<FaBell />
 								</span>
-								{unreadCount > 0 && (
+								{unreadNotifications > 0 && (
 									<span className="absolute left-6 top-1 bg-red-500 text-white text-[10px] h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center">
-										{unreadCount > 9 ? "9+" : unreadCount}
+										{unreadNotifications > 9 ? "9+" : unreadNotifications}
 									</span>
 								)}
 								<span className="hidden xl:block ml-3 font-medium">
@@ -142,12 +156,17 @@ const SocialMediaSidebarComponent = () => {
 						{/* Messages */}
 						<Link href={`/${userId}/messages`}>
 							<Button
-								className="w-full justify-start rounded-lg text-gray-200 hover:bg-green-900 hover:text-white transition"
+								className="relative w-full justify-start rounded-lg text-gray-200 hover:bg-green-900 hover:text-white transition"
 								variant="ghost"
 							>
 								<span className="text-xl">
 									<IoMail />
 								</span>
+								{unreadMessages > 0 && (
+									<span className="absolute left-6 top-1 bg-red-500 text-white text-[10px] h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center">
+										{unreadMessages > 9 ? "9+" : unreadMessages}
+									</span>
+								)}
 								<span className="hidden xl:block ml-3 font-medium">
 									Messages
 								</span>
