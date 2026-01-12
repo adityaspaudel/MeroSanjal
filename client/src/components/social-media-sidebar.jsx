@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { FaConnectdevelop, FaUserAlt, FaBell } from "react-icons/fa";
 import { IoHomeSharp, IoLogOut, IoMail } from "react-icons/io5";
 import { RiSearchFill } from "react-icons/ri";
@@ -14,10 +14,34 @@ const SocialMediaSidebarComponent = () => {
 	const { userId } = useParams();
 	const [user, setUser] = useState(null);
 	const [unreadCount, setUnreadCount] = useState(0);
+	const [unreadMsgCount, setUnreadMsgCount] = useState(0);
 	const socketRef = useRef(null);
 	const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-	// ---------- Setup Socket ----------
+	// ---------- 1. Optimized Fetch Counts ----------
+	const fetchCounts = useCallback(async () => {
+		if (!userId) return;
+		try {
+			const res = await axios.get(
+				`${NEXT_PUBLIC_API_URL}/users/${userId}/notifications`
+			);
+			const notifications = res.data.notifications;
+
+			const generalUnread = notifications.filter(
+				(n) => !n.isRead && n.type !== "message"
+			).length;
+			const messageUnread = notifications.filter(
+				(n) => !n.isRead && n.type === "message"
+			).length;
+
+			setUnreadCount(generalUnread);
+			setUnreadMsgCount(messageUnread);
+		} catch (err) {
+			console.error("Error fetching notification counts:", err);
+		}
+	}, [userId, NEXT_PUBLIC_API_URL]);
+
+	// ---------- 2. Setup Socket ----------
 	useEffect(() => {
 		if (!userId) return;
 
@@ -31,14 +55,24 @@ const SocialMediaSidebarComponent = () => {
 			setUnreadCount(data.count);
 		});
 
+		// Listen for new notifications
 		socketRef.current.on("newNotification", (data) => {
-			setUnreadCount((prev) => prev + 1);
+			if (data.notification.type === "message") {
+				setUnreadMsgCount((prev) => prev + 1);
+			} else {
+				setUnreadCount((prev) => prev + 1);
+			}
+		});
+
+		// 🔥 NEW: Listen for "messagesRead" event to clear the blue badge in real-time
+		socketRef.current.on("messagesRead", () => {
+			fetchCounts();
 		});
 
 		return () => socketRef.current.disconnect();
-	}, [userId, NEXT_PUBLIC_API_URL]);
+	}, [userId, NEXT_PUBLIC_API_URL, fetchCounts]);
 
-	// ---------- Fetch User ----------
+	// ---------- 3. Fetch Initial Data ----------
 	useEffect(() => {
 		if (!userId) return;
 		const fetchUser = async () => {
@@ -52,31 +86,13 @@ const SocialMediaSidebarComponent = () => {
 			}
 		};
 		fetchUser();
-	}, [userId, NEXT_PUBLIC_API_URL]);
+		fetchCounts();
+	}, [userId, NEXT_PUBLIC_API_URL, fetchCounts]);
 
-	// ---------- Fetch Initial Unread Count ----------
-	useEffect(() => {
-		if (!userId) return;
-		const fetchUnread = async () => {
-			try {
-				// /users/:userId/notifications/unreadNotificationCount
-
-				const res = await axios.get(
-					`${NEXT_PUBLIC_API_URL}/users/${userId}/notifications/unreadNotificationCount`
-				);
-				setUnreadCount(res.data.count);
-			} catch (err) {
-				console.error(err);
-			}
-		};
-		fetchUnread();
-	}, [userId, NEXT_PUBLIC_API_URL]);
 	return (
 		<div className="h-screen sticky top-0">
 			<div className="flex flex-col justify-between h-full w-[50px] sm:w-[100px] xl:w-[320px] bg-green-950 border-r border-green-900 px-2 py-4 text-gray-200">
-				{/* ---------- TOP ---------- */}
 				<div className="space-y-6">
-					{/* Logo */}
 					<Link
 						href={`/${userId}/home`}
 						className="flex items-center gap-3 px-3"
@@ -87,47 +103,33 @@ const SocialMediaSidebarComponent = () => {
 						</h2>
 					</Link>
 
-					{/* Navigation */}
 					<div className="flex flex-col gap-1">
-						{/* Home */}
 						<Link href={`/${userId}/home`}>
 							<Button
 								className="w-full justify-start rounded-lg text-gray-200 hover:bg-green-900 hover:text-white transition"
 								variant="ghost"
 							>
-								<span className="text-xl">
-									<IoHomeSharp />
-								</span>
+								<IoHomeSharp className="text-xl" />
 								<span className="hidden xl:block ml-3 font-medium">Home</span>
 							</Button>
 						</Link>
 
-						{/* Search */}
 						<Link href={`/${userId}/search`}>
 							<Button
 								className="w-full justify-start rounded-lg text-gray-200 hover:bg-green-900 hover:text-white transition"
 								variant="ghost"
 							>
-								<span className="text-xl">
-									<RiSearchFill />
-								</span>
-								<input
-									type="text"
-									placeholder="Search"
-									className="hidden xl:block ml-3 w-full bg-transparent focus:outline-none text-sm placeholder-gray-400"
-								/>
+								<RiSearchFill className="text-xl" />
+								<span className="hidden xl:block ml-3 font-medium">Search</span>
 							</Button>
 						</Link>
 
-						{/* Notifications */}
 						<Link href={`/${userId}/notifications`}>
 							<Button
 								className="relative w-full justify-start rounded-lg text-gray-200 hover:bg-green-900 hover:text-white transition"
 								variant="ghost"
 							>
-								<span className="text-xl">
-									<FaBell />
-								</span>
+								<FaBell className="text-xl" />
 								{unreadCount > 0 && (
 									<span className="absolute left-6 top-1 bg-red-500 text-white text-[10px] h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center">
 										{unreadCount > 9 ? "9+" : unreadCount}
@@ -139,30 +141,29 @@ const SocialMediaSidebarComponent = () => {
 							</Button>
 						</Link>
 
-						{/* Messages */}
 						<Link href={`/${userId}/messages`}>
 							<Button
-								className="w-full justify-start rounded-lg text-gray-200 hover:bg-green-900 hover:text-white transition"
+								className="relative w-full justify-start rounded-lg text-gray-200 hover:bg-green-900 hover:text-white transition"
 								variant="ghost"
 							>
-								<span className="text-xl">
-									<IoMail />
-								</span>
+								<IoMail className="text-xl" />
+								{unreadMsgCount > 0 && (
+									<span className="absolute left-6 top-1 bg-blue-500 text-white text-[10px] h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center">
+										{unreadMsgCount > 9 ? "9+" : unreadMsgCount}
+									</span>
+								)}
 								<span className="hidden xl:block ml-3 font-medium">
 									Messages
 								</span>
 							</Button>
 						</Link>
 
-						{/* Profile */}
 						<Link href={`/${userId}/profile`}>
 							<Button
 								className="w-full justify-start rounded-lg text-gray-200 hover:bg-green-900 hover:text-white transition"
 								variant="ghost"
 							>
-								<span className="text-xl">
-									<FaUserAlt />
-								</span>
+								<FaUserAlt className="text-xl" />
 								<span className="hidden xl:block ml-3 font-medium">
 									Profile
 								</span>
@@ -171,9 +172,7 @@ const SocialMediaSidebarComponent = () => {
 					</div>
 				</div>
 
-				{/* ---------- BOTTOM ---------- */}
 				<div className="space-y-3">
-					{/* User Info */}
 					{user && (
 						<Link
 							href={`/${userId}/profile`}
@@ -196,7 +195,6 @@ const SocialMediaSidebarComponent = () => {
 						</Link>
 					)}
 
-					{/* Logout */}
 					<Link href="/">
 						<Button
 							className="w-full justify-start text-red-400 hover:bg-red-900/40 hover:text-white rounded-lg"
