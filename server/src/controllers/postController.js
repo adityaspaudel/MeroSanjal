@@ -14,28 +14,26 @@ const createPost = async (req, res) => {
 
 		let imageUrls = [];
 
-		if (req.files?.length) {
+		// ✅ Cloudinary upload
+		if (req.files && req.files.length > 0) {
 			for (const file of req.files) {
 				const uploadResult = await cloudinary.uploader.upload(
 					`data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
-					{
-						folder: "posts",
-					}
+					{ folder: "posts" }
 				);
+				// store only the cloudinary url (no server prefix ever)
 
 				imageUrls.push(uploadResult.secure_url);
 			}
 		}
 
-		console.log("✅ Cloudinary image URLs:", imageUrls);
+		console.log("✅ Stored Cloudinary URLs:", imageUrls);
 
-		const post = new Post({
+		const post = await Post.create({
 			author,
 			content,
-			imagesUrl: imageUrls,
+			imagesUrl: imageUrls, // cloudinary urls
 		});
-
-		await post.save();
 
 		res.status(201).json({
 			message: "✅ Post created successfully",
@@ -47,7 +45,7 @@ const createPost = async (req, res) => {
 	}
 };
 
-// ✅ getPosts of followed User controller
+//  getPosts of followed User controller
 
 const getPostsOfFollowedUsers = async (req, res) => {
 	try {
