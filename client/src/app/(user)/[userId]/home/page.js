@@ -40,7 +40,10 @@ const HomeComponent = () => {
 			setLoading(false);
 		}
 	};
-
+	const getImageUrl = (img) => {
+		if (img.startsWith("http")) return img; // Cloudinary
+		return `${NEXT_PUBLIC_API_URL}/${img}`; // Old local images
+	};
 	const handleImageChange = (e) => {
 		const selected = Array.from(e.target.files);
 		if (selected.length > 5) {
@@ -262,7 +265,10 @@ const HomeComponent = () => {
 			console.error("Error deleting comment:", error);
 		}
 	};
-
+	const normalizeImages = (imagesUrl) => {
+		if (!imagesUrl) return [];
+		return Array.isArray(imagesUrl) ? imagesUrl : [imagesUrl];
+	};
 	return (
 		<div className="p-6 max-w-xl mx-auto min-h-full ">
 			{/* Create Post */}
@@ -359,30 +365,25 @@ const HomeComponent = () => {
 										{post.content}
 									</p>
 
-									{post.imagesUrl?.length > 0 && (
-										<div className="flex gap-2 flex-wrap mt-2 justify-center items-center ">
-											{post.imagesUrl.map((img, idx) => (
+									{normalizeImages(post.imagesUrl).length > 0 && (
+										<div className="flex gap-2 flex-wrap mt-2 justify-center items-center">
+											{normalizeImages(post.imagesUrl).map((img, idx) => (
 												<Dialog key={idx}>
-													<form>
-														<DialogTrigger asChild>
-															<img
-																src={`${img}`}
-																alt={`post-${idx}`}
-																className="w-32 h-32 object-cover rounded-sm  cursor-pointer hover:scale-105 transition-transform"
-																title="Click to view"
-															/>
-														</DialogTrigger>
-														<DialogContent className="sm:max-w-[800px] sm:max-h-[600px] flex flex-col justify-center items-center bg-white rounded-sm p-4">
-															<DialogHeader>
-																<DialogTitle></DialogTitle>
-															</DialogHeader>
-															<img
-																src={`${img}`}
-																alt={`post-${idx}`}
-																className="h-[600px] object-contain rounded-sm border"
-															/>
-														</DialogContent>
-													</form>
+													<DialogTrigger asChild>
+														<img
+															src={getImageUrl(img)}
+															alt={`post-${idx}`}
+															className="w-32 h-32 object-cover rounded-sm cursor-pointer"
+														/>
+													</DialogTrigger>
+
+													<DialogContent className="sm:max-w-[800px] sm:max-h-[600px] flex justify-center items-center bg-white rounded-sm p-4">
+														<img
+															src={getImageUrl(img)}
+															alt={`post-${idx}`}
+															className="h-[600px] object-contain rounded-sm"
+														/>
+													</DialogContent>
 												</Dialog>
 											))}
 										</div>
