@@ -40,10 +40,7 @@ const HomeComponent = () => {
 			setLoading(false);
 		}
 	};
-	const getImageUrl = (img) => {
-		if (img.startsWith("http")) return img; // Cloudinary
-		return `${NEXT_PUBLIC_API_URL}/${img}`; // Old local images
-	};
+
 	const handleImageChange = (e) => {
 		const selected = Array.from(e.target.files);
 		if (selected.length > 5) {
@@ -265,10 +262,32 @@ const HomeComponent = () => {
 			console.error("Error deleting comment:", error);
 		}
 	};
+
 	const normalizeImages = (imagesUrl) => {
 		if (!imagesUrl) return [];
-		return Array.isArray(imagesUrl) ? imagesUrl : [imagesUrl];
+		if (Array.isArray(imagesUrl)) return imagesUrl;
+		return [imagesUrl];
 	};
+
+	const getImageUrl = (img) => {
+		if (!img) return "";
+
+		let url = String(img).trim();
+
+		//  remove accidental backend prefix if exists
+		if (url.includes("https://res.cloudinary.com")) {
+			url = url.substring(url.indexOf("https://res.cloudinary.com"));
+		}
+
+		//  Cloudinary or any external URL
+		if (/^https?:\/\//i.test(url)) {
+			return url;
+		}
+
+		//  Local uploads (old posts)
+		return `${NEXT_PUBLIC_API_URL}/${url}`;
+	};
+
 	return (
 		<div className="p-6 max-w-xl mx-auto min-h-full ">
 			{/* Create Post */}
@@ -366,7 +385,7 @@ const HomeComponent = () => {
 									</p>
 
 									{normalizeImages(post.imagesUrl).length > 0 && (
-										<div className="flex gap-2 flex-wrap mt-2 justify-center items-center">
+										<div className="flex gap-2 flex-wrap mt-2 justify-center items-center overflow-y-scroll">
 											{normalizeImages(post.imagesUrl).map((img, idx) => (
 												<Dialog key={idx}>
 													<DialogTrigger asChild>
@@ -377,11 +396,17 @@ const HomeComponent = () => {
 														/>
 													</DialogTrigger>
 
-													<DialogContent className="sm:max-w-[800px] sm:max-h-[600px] flex justify-center items-center bg-white rounded-sm p-4">
+													<DialogContent className="sm:max-w-[800px] sm:max-h-[600px] flex flex-col justify-center items-center bg-white rounded-sm p-4">
+														<div
+															className="w-[400px] text-wrap break-all
+"
+														>
+															<DialogTitle>{getImageUrl(img)}</DialogTitle>
+														</div>
 														<img
 															src={getImageUrl(img)}
 															alt={`post-${idx}`}
-															className="h-[600px] object-contain rounded-sm"
+															className="h-[400px] object-contain rounded-sm"
 														/>
 													</DialogContent>
 												</Dialog>
