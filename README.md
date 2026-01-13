@@ -7,6 +7,8 @@
 - Styling: Tailwind CSS, NextUI, Shadcn
 - Icons: React Icons, Lucide React
 - Form Handling: Formik with Yup validation
+- Live feed: Socket.io
+- Image Storage: Cloudinary
 - AI-Assisted Development: V0.dev, ChatGPT, Gemini
 - Utilities: util
 
@@ -82,18 +84,26 @@
   - [x] Live likes/comments count
 
 - [x] **Direct Messaging (DMs)**
+
   - [x] Chat between users
   - [x] Real-time using Socket.io
+  - [x] Live notification for unread messages
+  - [x] Display Read / unread messages
+
+- [x] **Cloud Setup Integration**
+  - [x] Mongodb Atlas for database
+  - [x] Cloudinary setup for image storage
 
 ---
 
 ## **Phase 4: Deployment to Vercel and Render**
+
 - [x] **Deployment**
   - [x] Deployed frontend to vercel
   - [x] Deployed backend to render
 
-
 ---
+
 ## Getting Started
 
 1. Clone the repository
