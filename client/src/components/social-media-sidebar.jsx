@@ -91,7 +91,7 @@ const SocialMediaSidebarComponent = () => {
 
 	return (
 		<div className="h-screen sticky top-0">
-			<div className="flex flex-col justify-between h-full w-[50px] sm:w-[100px] xl:w-[320px] bg-green-950 border-r border-green-900 px-2 py-4 text-gray-200">
+			<div className="flex flex-col justify-between h-full w-[50px] sm:w-[100px] xl:w-[320px] bg-green-950 border-r border-green-900 px-2 py-4 text-gray-200 ">
 				<div className="space-y-6">
 					<Link
 						href={`/${userId}/home`}

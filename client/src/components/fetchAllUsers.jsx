@@ -68,7 +68,7 @@ export default function AllUsers() {
 
 	if (loading)
 		return (
-			<div className="space-y-4 animate-pulse border p-4">
+			<div className="space-y-4 animate-pulse border p-4 max-h-screen ">
 				{Array.from({ length: 10 }).map((_, index) => (
 					<div
 						key={index}
@@ -97,7 +97,7 @@ export default function AllUsers() {
 		);
 
 	return (
-		<div className="p-4 min-h-screen bg-white shadow hover:shadow-black hover:shadow-md  transition 1s">
+		<div className="p-4 h-screen bg-white shadow hover:shadow-black hover:shadow-md  transition 1s overflow-auto">
 			<h2 className="text-2xl font-bold mb-6 text-gray-800">All Users</h2>
 			{users.length === 0 ? (
 				<p className="text-gray-600">No users found.</p>

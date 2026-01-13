@@ -106,7 +106,7 @@ const UserMessageDashboard = () => {
 	}, [getUserDetails, fetchNotifications]);
 
 	return (
-		<main className="min-h-full bg-white text-black p-6 max-w-xl mx-auto rounded-sm">
+		<main className="h-screen bg-white text-black p-6 max-w-xl mx-auto rounded-sm  overflow-auto ">
 			<div className="flex items-start text-2xl font-bold w-full mb-4">
 				<span
 					onClick={() => router.back()}

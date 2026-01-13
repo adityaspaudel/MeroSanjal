@@ -113,7 +113,7 @@ export default function ChatBoard() {
 	};
 
 	return (
-		<main className="flex flex-col min-h-screen max-w-2xl mx-auto bg-white shadow-2xl">
+		<main className="flex flex-col h-screen max-w-2xl mx-auto bg-white shadow-2xl overflow-auto">
 			{/* Header */}
 			<header className="bg-white p-4 border-b flex items-center gap-4 z-10">
 				<button
