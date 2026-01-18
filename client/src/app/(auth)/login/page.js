@@ -71,7 +71,7 @@ const LoginForm = () => {
 					</label>
 					<input
 						type="email"
-						placeholder="you@example.com"
+						placeholder="youremail@example.com"
 						className={`w-full px-4 py-2 rounded-md bg-gray-50 border focus:outline-none focus:ring-2 focus:ring-green-700 ${
 							formik.touched.email && formik.errors.email
 								? "border-red-500"
@@ -80,9 +80,7 @@ const LoginForm = () => {
 						{...formik.getFieldProps("email")}
 					/>
 					{formik.touched.email && formik.errors.email && (
-						<p className="mt-1 text-xs text-red-600">
-							{formik.errors.email}
-						</p>
+						<p className="mt-1 text-xs text-red-600">{formik.errors.email}</p>
 					)}
 				</div>
 
@@ -94,7 +92,7 @@ const LoginForm = () => {
 					<div className="relative">
 						<input
 							type={showPassword ? "text" : "password"}
-							placeholder="••••••••"
+							placeholder="••••••••••••••••"
 							className={`w-full px-4 py-2 pr-12 rounded-md bg-gray-50 border focus:outline-none focus:ring-2 focus:ring-green-700 ${
 								formik.touched.password && formik.errors.password
 									? "border-red-500"
@@ -128,7 +126,6 @@ const LoginForm = () => {
 
 				{/* Links */}
 				<div className="mt-5 text-center text-sm text-gray-700">
-					
 					<p className="mt-2">
 						Don’t have an account?{" "}
 						<Link

@@ -30,7 +30,7 @@ const HomeComponent = () => {
 	const fetchPosts = async () => {
 		try {
 			const { data } = await axios.get(
-				`${NEXT_PUBLIC_API_URL}/posts/${userId}/following`
+				`${NEXT_PUBLIC_API_URL}/posts/${userId}/following`,
 			);
 			setPosts(data.posts || []);
 		} catch (error) {
@@ -80,7 +80,9 @@ const HomeComponent = () => {
 				content: editContent,
 			});
 			setPosts((prev) =>
-				prev.map((p) => (p._id === postId ? { ...p, content: editContent } : p))
+				prev.map((p) =>
+					p._id === postId ? { ...p, content: editContent } : p,
+				),
 			);
 			setEditingPost(null);
 			setEditContent("");
@@ -102,7 +104,7 @@ const HomeComponent = () => {
 		try {
 			const { data } = await axios.put(
 				`${NEXT_PUBLIC_API_URL}/posts/${postId}/like`,
-				{ userId }
+				{ userId },
 			);
 			setPosts((prev) =>
 				prev.map((p) =>
@@ -112,9 +114,9 @@ const HomeComponent = () => {
 								likes: data.liked
 									? [...p.likes, userId]
 									: p.likes.filter((id) => id !== userId),
-						  }
-						: p
-				)
+							}
+						: p,
+				),
 			);
 		} catch (error) {
 			console.error("Error toggling like:", error);
@@ -128,14 +130,14 @@ const HomeComponent = () => {
 		try {
 			const { data } = await axios.post(
 				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments`,
-				{ userId, postId, text }
+				{ userId, postId, text },
 			);
 			setPosts((prev) =>
 				prev.map((p) =>
 					p._id === postId
 						? { ...p, comments: [...p.comments, data.comment] }
-						: p
-				)
+						: p,
+				),
 			);
 			setCommentText((prev) => ({ ...prev, [postId]: "" }));
 		} catch (error) {
@@ -148,7 +150,7 @@ const HomeComponent = () => {
 		try {
 			await axios.put(
 				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
-				{ userId, text: editCommentText }
+				{ userId, text: editCommentText },
 			);
 			setPosts((prev) =>
 				prev.map((p) =>
@@ -156,11 +158,11 @@ const HomeComponent = () => {
 						? {
 								...p,
 								comments: p.comments.map((c) =>
-									c._id === commentId ? { ...c, text: editCommentText } : c
+									c._id === commentId ? { ...c, text: editCommentText } : c,
 								),
-						  }
-						: p
-				)
+							}
+						: p,
+				),
 			);
 			setEditingComment(null);
 			setEditCommentText("");
@@ -249,14 +251,14 @@ const HomeComponent = () => {
 		try {
 			await axios.delete(
 				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
-				{ data: { userId } }
+				{ data: { userId } },
 			);
 			setPosts((prev) =>
 				prev.map((p) =>
 					p._id === postId
 						? { ...p, comments: p.comments.filter((c) => c._id !== commentId) }
-						: p
-				)
+						: p,
+				),
 			);
 		} catch (error) {
 			console.error("Error deleting comment:", error);
@@ -366,7 +368,7 @@ const HomeComponent = () => {
 									<div className="flex gap-2">
 										<button
 											onClick={() => updatePost(post._id)}
-											className="bg-gray-600 text-white px-3 py-1 rounded-sm"
+											className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-sm"
 										>
 											Save
 										</button>
@@ -380,9 +382,10 @@ const HomeComponent = () => {
 								</div>
 							) : (
 								<>
-									<p className="mt-2 text-gray-800 break-words text-lg">
+									<div className="mt-2 text-green-800 break-words text-2xl w-full text-center">
 										{post.content}
-									</p>
+										<hr />
+									</div>
 
 									{normalizeImages(post.imagesUrl).length > 0 && (
 										<div className="flex gap-2 flex-wrap mt-2 justify-center items-center overflow-y-scroll">
@@ -478,7 +481,7 @@ const HomeComponent = () => {
 														/>
 														<button
 															onClick={() => updateComment(post._id, c._id)}
-															className="px-2 py-1 bg-gray-600 text-white rounded-sm"
+															className="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded-sm"
 														>
 															Save
 														</button>
