@@ -276,7 +276,7 @@ export default function IndividualPost() {
 									setEditingComment(c._id);
 									setEditCommentText(c.text);
 								}}
-								className="bg-blue-500 hover:bg-blue-600 px-2 rounded-sm "
+								className="bg-gray-500 hover:bg-gray-600 px-2 rounded-sm "
 							>
 								Edit
 							</button>

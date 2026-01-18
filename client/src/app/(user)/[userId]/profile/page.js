@@ -55,7 +55,7 @@ export default function UserProfile() {
 			setLoading(true);
 			try {
 				const { data } = await axios.get(
-					`${NEXT_PUBLIC_API_URL}/users/${userId}/profile`
+					`${NEXT_PUBLIC_API_URL}/users/${userId}/profile`,
 				);
 				console.log(data);
 				setUser(data.user);
@@ -90,7 +90,7 @@ export default function UserProfile() {
 		try {
 			const { data } = await axios.put(
 				`${NEXT_PUBLIC_API_URL}/posts/${postId}/like`,
-				{ userId }
+				{ userId },
 			);
 
 			setPosts((prev) =>
@@ -101,9 +101,9 @@ export default function UserProfile() {
 								likes: data.liked
 									? [...p.likes, userId]
 									: p.likes.filter((id) => id !== userId),
-						  }
-						: p
-				)
+							}
+						: p,
+				),
 			);
 		} catch (error) {
 			console.error("Error toggling like:", error);
@@ -119,8 +119,8 @@ export default function UserProfile() {
 
 			setPosts((prev) =>
 				prev.map((p) =>
-					p._id === postId ? { ...p, content: editPostContent } : p
-				)
+					p._id === postId ? { ...p, content: editPostContent } : p,
+				),
 			);
 
 			setEditingPostId(null);
@@ -148,15 +148,15 @@ export default function UserProfile() {
 		try {
 			const { data } = await axios.post(
 				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments`,
-				{ userId, text }
+				{ userId, text },
 			);
 
 			setPosts((prev) =>
 				prev.map((p) =>
 					p._id === postId
 						? { ...p, comments: [...p.comments, data.comment] }
-						: p
-				)
+						: p,
+				),
 			);
 
 			setCommentText((prev) => ({ ...prev, [postId]: "" }));
@@ -269,7 +269,7 @@ export default function UserProfile() {
 
 			const { data } = await axios.put(
 				`${NEXT_PUBLIC_API_URL}/users/${userId}/profile`,
-				formData
+				formData,
 			);
 
 			alert("Profile updated successfully!");
@@ -293,7 +293,7 @@ export default function UserProfile() {
 		try {
 			const { data } = await axios.put(
 				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
-				{ userId, text: editCommentText } // only userId and text
+				{ userId, text: editCommentText }, // only userId and text
 			);
 			console.log("data", data);
 			setPosts((prev) =>
@@ -302,11 +302,11 @@ export default function UserProfile() {
 						? {
 								...p,
 								comments: p.comments.map((c) =>
-									c._id === commentId ? { ...c, text: editCommentText } : c
+									c._id === commentId ? { ...c, text: editCommentText } : c,
 								),
-						  }
-						: p
-				)
+							}
+						: p,
+				),
 			);
 
 			// setEditingComment(null);
@@ -314,7 +314,7 @@ export default function UserProfile() {
 		} catch (error) {
 			console.error(
 				"Error updating comment:",
-				error.response?.data || error.message
+				error.response?.data || error.message,
 			);
 		} finally {
 			setEditingCommentId(null);
@@ -326,20 +326,20 @@ export default function UserProfile() {
 		try {
 			await axios.delete(
 				`${NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
-				{ data: { userId } } // only send userId
+				{ data: { userId } }, // only send userId
 			);
 
 			setPosts((prev) =>
 				prev.map((p) =>
 					p._id === postId
 						? { ...p, comments: p.comments.filter((c) => c._id !== commentId) }
-						: p
-				)
+						: p,
+				),
 			);
 		} catch (error) {
 			console.error(
 				"Error deleting comment:",
-				error.response?.data || error.message
+				error.response?.data || error.message,
 			);
 		}
 	};
@@ -760,38 +760,103 @@ export default function UserProfile() {
 								key={post._id}
 								className="bg-white rounded-md shadow-md hover:shadow-xl transition-shadow duration-300 p-6 mb-6 border border-gray-200"
 							>
-								<Link
-									href={`/${userId}/posts/${post._id}`}
-									className="flex flex-col gap-4 items-center justify-between mb-3"
-								>
-									<div className="flex items-start content-start w-full gap-3">
-										<div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold">
-											<img
-												className="rounded-[50%]"
-												src="/blank-pp.jpg"
-												height="80px"
-												width="80px"
-											/>
-										</div>
-										<div>
-											<p className="font-semibold text-gray-800">
-												{post.author?.fullName}
-											</p>
-											<p className="text-xs text-gray-500">
-												{new Date(post.createdAt).toLocaleString()}
-											</p>
-										</div>
+								<div className="flex items-start content-start w-full gap-3">
+									<div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold">
+										<img
+											className="rounded-[50%]"
+											src="/blank-pp.jpg"
+											height="80px"
+											width="80px"
+										/>
 									</div>
+									<div>
+										<p className="font-semibold text-gray-800">
+											{post.author?.fullName}
+										</p>
+										<p className="text-xs text-gray-500">
+											{new Date(post.createdAt).toLocaleString()}
+										</p>
+									</div>
+								</div>
 
-									<p className="flex items-start text-gray-700 leading-relaxed mb-4 break-all w-md">
-										<span className="break-all text-center text-2xl text-green-700">
-											{post.content}
-										</span>
-									</p>
-								</Link>
+								<div className="flex mt-4 flex-col items-start text-gray-700 leading-relaxed mb-4 break-all w-md">
+									{editingPostId === post._id ? (
+										<div className="flex gap-2 mb-3">
+											<input
+												value={editPostContent}
+												onChange={(e) => setEditPostContent(e.target.value)}
+												className="border flex-1 px-2 py-1 rounded"
+											/>
+											<button
+												onClick={() => updatePost(post._id)}
+												className="bg-green-500 text-white px-2 rounded"
+											>
+												save
+											</button>
+											<button
+												onClick={() => setEditingPostId(null)}
+												className="bg-gray-400 text-white px-2 rounded"
+											>
+												cancel
+											</button>
+										</div>
+									) : (
+										<div className="w-full">
+											<Link
+												href={`/${userId}/posts/${post._id}`}
+												className="flex flex-col gap-4 items-center justify-between mb-3"
+											>
+												<span className="break-all text-center text-2xl text-green-700 w-full">
+													{post.content}
+												</span>
+											</Link>
+											{post.author?._id === userId && (
+												<div className="flex gap-2 justify-between items-center text-xs mt-2">
+													<div className="flex gap-2">
+														<button
+															onClick={() => toggleLike(post._id)}
+															className={`px-3 py-1 rounded text-white ${
+																liked
+																	? "bg-red-600 hover:bg-red-700"
+																	: "bg-green-600 hover:bg-green-700"
+															}`}
+														>
+															{liked ? "Unlike" : "Like"}
+														</button>
+														<div>
+															{post.likes?.length || 0}{" "}
+															{post.likes?.length === 1 ? (
+																<span>Like</span>
+															) : (
+																<span>Likes</span>
+															)}
+														</div>
+													</div>
+													<div className="flex gap-2">
+														<button
+															onClick={() => {
+																setEditingPostId(post._id);
+																setEditPostContent(post.content);
+															}}
+															className="bg-gray-500 text-white px-2 py-1 rounded"
+														>
+															Edit
+														</button>
+														<button
+															onClick={() => deletePost(post._id)}
+															className="bg-red-500 text-white px-2 rounded"
+														>
+															Delete
+														</button>
+													</div>
+												</div>
+											)}
+										</div>
+									)}
+								</div>
 
-								<div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
-									<button
+								<div className="flex items-center gap-2 mb-4 text-sm text-gray-600">
+									{/* <button
 										onClick={() => toggleLike(post._id)}
 										className={`px-3 py-1 rounded text-white ${
 											liked
@@ -805,51 +870,50 @@ export default function UserProfile() {
 									<span>
 										{post.likes?.length || 0}{" "}
 										{post.likes?.length === 1 ? "Like" : "Likes"}
-									</span>
-								</div>
-
-								{/* --------- POST EDIT MODE ---- */}
-								{editingPostId === post._id ? (
-									<div className="flex gap-2 mb-3">
-										<input
-											value={editPostContent}
-											onChange={(e) => setEditPostContent(e.target.value)}
-											className="border flex-1 px-2 py-1 rounded"
-										/>
-										<button
-											onClick={() => updatePost(post._id)}
-											className="bg-green-500 text-white px-2 rounded"
-										>
-											save
-										</button>
-										<button
-											onClick={() => setEditingPostId(null)}
-											className="bg-gray-400 text-white px-2 rounded"
-										>
-											cancel
-										</button>
-									</div>
-								) : (
-									post.author?._id === userId && (
-										<div className="flex gap-2 text-xs mt-2">
+									</span> */}
+									{/* --------- POST EDIT MODE ---- */}
+									{/* {editingPostId === post._id ? (
+										<div className="flex gap-2 mb-3">
+											<input
+												value={editPostContent}
+												onChange={(e) => setEditPostContent(e.target.value)}
+												className="border flex-1 px-2 py-1 rounded"
+											/>
 											<button
-												onClick={() => {
-													setEditingPostId(post._id);
-													setEditPostContent(post.content);
-												}}
-												className="bg-gray-500 text-white px-2 rounded"
+												onClick={() => updatePost(post._id)}
+												className="bg-green-500 text-white px-2 rounded"
 											>
-												Edit
+												save
 											</button>
 											<button
-												onClick={() => deletePost(post._id)}
-												className="bg-red-500 text-white px-2 rounded"
+												onClick={() => setEditingPostId(null)}
+												className="bg-gray-400 text-white px-2 rounded"
 											>
-												Delete
+												cancel
 											</button>
 										</div>
-									)
-								)}
+									) : (
+										post.author?._id === userId && (
+											<div className="flex gap-2 text-xs mt-2">
+												<button
+													onClick={() => {
+														setEditingPostId(post._id);
+														setEditPostContent(post.content);
+													}}
+													className="bg-gray-500 text-white px-2 py-1 rounded"
+												>
+													Edit
+												</button>
+												<button
+													onClick={() => deletePost(post._id)}
+													className="bg-red-500 text-white px-2 rounded"
+												>
+													Delete
+												</button>
+											</div>
+										)
+									)} */}
+								</div>
 
 								{/* ===== COMMENTS ===== */}
 								<div className="border-t pt-2 mt-3">
