@@ -146,7 +146,7 @@
 ## 🌐 Live Demo
 
 - **Frontend (Vercel):** https://merosanjal.vercel.app
-- **Backend (Render):** https://merosanjal.onrender.com/
+- **Backend (Render):** https://merosanjal-vcjx.onrender.com
 
 # Project Screenshots
 
