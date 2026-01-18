@@ -69,7 +69,7 @@ const SearchComponent = () => {
 	};
 
 	return (
-		<div className="p-6 bg-slate-50 min-h-screen">
+		<div className="p-6 bg-slate-50 min-h-screen w-full">
 			{/* Header Section */}
 			<div className="flex items-center gap-4 mb-8">
 				<button
@@ -81,20 +81,20 @@ const SearchComponent = () => {
 				<h1 className="text-2xl font-bold text-slate-800">Find People</h1>
 			</div>
 			{/* Search Bar Section */}
-			<div className="flex gap-2 max-w-2xl mb-10">
+			<div className="flex gap-2 w-2xl mb-10">
 				<div className="relative flex-1">
 					<input
 						type="text"
 						value={fullName}
 						onChange={(e) => setFullName(e.target.value)}
 						placeholder="Search by name..."
-						className="w-full border-none p-3 pl-10 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all bg-white text-black"
+						className="w-full border-none p-3 pl-10 rounded-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all bg-white text-black"
 					/>
 					<span className="absolute left-3 top-3.5 opacity-40">🔍</span>
 				</div>
 				<button
 					onClick={() => executeSearch(fullName)}
-					className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors shadow-md"
+					className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-sm transition-colors shadow-md"
 				>
 					Search
 				</button>
@@ -102,7 +102,7 @@ const SearchComponent = () => {
 			{apiMessage && <pre>{JSON.stringify(apiMessage, 2, 2)}</pre>}
 
 			{/* Results Section */}
-			<div className="max-w-4xl">
+			<div className="w-xl">
 				{loading ? (
 					<div className="flex items-center gap-2 text-slate-500">
 						<div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -113,7 +113,7 @@ const SearchComponent = () => {
 						{results.map((user) => (
 							<div
 								key={user._id}
-								className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
+								className="flex items-center justify-between p-4 hover:bg-gray-100 bg-white rounded-sm shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
 							>
 								<div className="flex items-center gap-3">
 									{/* User Avatar */}
@@ -124,7 +124,7 @@ const SearchComponent = () => {
 										<h3 className="font-semibold text-slate-800">
 											{user.fullName}
 										</h3>
-										<p className="text-xs text-slate-400 uppercase tracking-wider font-medium">
+										<p className="text-xs text-slate-400  tracking-wider font-medium">
 											{user._id === userId ? "Your Profile" : "User"}
 										</p>
 									</div>
@@ -134,7 +134,7 @@ const SearchComponent = () => {
 								{user._id !== userId ? (
 									<button
 										onClick={() => toggleFollowUnfollow(user._id)}
-										className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm ${
+										className={`px-5 py-2 rounded-sm text-sm font-semibold transition-all shadow-sm ${
 											followState[user._id]
 												? "bg-slate-100 text-slate-600 hover:bg-red-50 hover:text-red-600 border border-slate-200"
 												: "bg-blue-600 text-white hover:bg-blue-700"

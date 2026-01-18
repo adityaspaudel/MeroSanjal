@@ -47,7 +47,7 @@ export default function AllUsers() {
 					method: "PUT",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({ followingTo: userId }),
-				}
+				},
 			);
 			if (!response.ok) throw new Error("Failed to toggle follow");
 
@@ -55,8 +55,8 @@ export default function AllUsers() {
 				prev.map((user) =>
 					user._id === userId
 						? { ...user, isFollowing: !user.isFollowing }
-						: user
-				)
+						: user,
+				),
 			);
 		} catch (err) {
 			console.error(err);
@@ -106,7 +106,7 @@ export default function AllUsers() {
 					{users.map((user) => (
 						<div
 							key={user._id}
-							className="flex flex-col gap-2 sm:flex-row items-center justify-between p-4 bg-white hover:bg-gray-900 hover:text-white rounded-sm shadow hover:shadow-lg transition-shadow duration-200"
+							className="flex flex-col gap-2 sm:flex-row items-center justify-between p-4 bg-white hover:bg-gray-100  rounded-sm shadow hover:shadow-lg transition-shadow duration-200"
 						>
 							<div className="flex flex-col text-center sm:text-left sm:flex-1">
 								<p className="font-semibold ">{user.fullName}</p>
@@ -119,15 +119,15 @@ export default function AllUsers() {
 										disabled={updating[user._id]}
 										className={`mt-2 sm:mt-0 px-4 py-2 rounded-md text-white font-medium transition-colors duration-200 ${
 											user.isFollowing
-												? "bg-red-500 hover:bg-red-600"
+												? "bg-gray-100 hover:text-red-600"
 												: "bg-green-500 hover:bg-green-600"
 										}`}
 									>
 										{updating[user._id]
 											? "..."
 											: user.isFollowing
-											? "Unfollow"
-											: "Follow"}
+												? <span className="text-gray-600 hover:text-red-600">Following</span>
+												: <span className="">Follow</span>}
 									</button>
 								)}
 							</div>
