@@ -2,17 +2,17 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  userRegistration,
-  userLogin,
-  getUserProfile,
-  updateUserProfile,
-  searchUsers,
-  toggleFollowUnfollow,
-  getUserById,
-  getAllRegisteredUser,
-  getUserFollowing,
-  getUserFollowers,
-  getFollowingFriendsList,
+	userRegistration,
+	userLogin,
+	getUserProfile,
+	updateUserProfile,
+	searchUsers,
+	toggleFollowUnfollow,
+	getUserById,
+	getAllRegisteredUser,
+	getUserFollowing,
+	getUserFollowers,
+	getFollowingFriendsList,
 } = require("../controllers/userController");
 
 // userRegistration route

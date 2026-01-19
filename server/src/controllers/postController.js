@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 const path = require("path");
 const cloudinary = require("../middlewares/cloudinary");
 
+
 const createPost = async (req, res) => {
 	try {
 		const { author, content } = req.body;
