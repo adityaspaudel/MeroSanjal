@@ -2,7 +2,7 @@ const Post = require("../models/postModel");
 const { createNotification } = require("./notificationController");
 const User = require("../models/userModel");
 const path = require("path");
-const cloudinary = require("../config/cloudinary");
+const cloudinary = require("../middlewares/cloudinary");
 
 const createPost = async (req, res) => {
 	try {
